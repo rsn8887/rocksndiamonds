@@ -29,6 +29,12 @@
 #include "misc.h"
 #include "hash.h"
 
+#ifdef __vita__
+#undef PLATFORM_UNIX
+#define chmod(a,b)
+#define getuid()
+#define getpwuid()
+#endif
 
 #define ENABLE_UNUSED_CODE	FALSE	/* for currently unused functions */
 

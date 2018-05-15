@@ -12,11 +12,13 @@
 # -----------------------------------------------------------------------------
 # configuration
 # -----------------------------------------------------------------------------
-
+#Vita specific
+VITA_TITLEID           := ROCKS0000
+GIT_VERSION := $(shell git describe --abbrev=6 --dirty --always --tags)
+PREFIX = arm-vita-eabi
 # command name of your favorite ANSI C compiler
 # (this must be set to "cc" for some systems)
-CC = gcc
-
+CC = $(PREFIX)-gcc
 # command name of GNU make on your system
 # (this must be set to "gmake" for some systems)
 MAKE = make
@@ -27,6 +29,7 @@ MAKE = make
 # RO_GAME_DIR = .
 # use the following setting for Debian / Ubuntu installations:
 # RO_GAME_DIR = /usr/share/games/rocksndiamonds
+RO_GAME_DIR = ux0:/data/rocksndiamonds
 
 # directory for writable game data (like highscore files)
 # (if no "scores" directory exists, scores are saved in user data directory)
@@ -34,6 +37,7 @@ MAKE = make
 # RW_GAME_DIR = .
 # use the following setting for Debian / Ubuntu installations:
 # RW_GAME_DIR = /var/games/rocksndiamonds
+RW_GAME_DIR = ux0:/data/rocksndiamonds
 
 # uncomment if system has no joystick include file
 # JOYSTICK = -DNO_JOYSTICK
@@ -67,6 +71,10 @@ sdl:
 
 sdl2:
 	@$(MAKE_CMD) TARGET=sdl2
+
+vita:
+	@$(MAKE_CMD) TARGET=vita
+	
 
 mac:
 	@$(MAKE_CMD) PLATFORM=macosx

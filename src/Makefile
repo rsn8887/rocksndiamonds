@@ -86,6 +86,17 @@ SDL_LIBS = -lSDL2_image -lSDL2_mixer -lSDL2_net
 SYS_LDFLAGS = $(SDL_LIBS) $(shell sdl2-config --libs)
 endif
 
+ifeq ($(TARGET),vita)			# compiling for Vita target
+SYS_CFLAGS = -DTARGET_SDL2  -I$(VITASDK)/$(PREFIX)/include/SDL2 \
+        -Wl,-q -Wall -Wno-unused-variable
+SYS_LDFLAGS = $(SYS_CFLAGS) -lSDL2_image -lSDL2_mixer -lSDL2_net -lSDL2 -lvorbisfile -lvorbis -logg -lvita2d \
+        -lSceAudio_stub -lSceLibKernel_stub -lSceDisplay_stub -lSceGxm_stub      \
+        -lmikmod -lSceSysmodule_stub -lSceCtrl_stub -lSceTouch_stub -lm -lSceNet_stub \
+        -lSceNetCtl_stub -lScePgf_stub -ljpeg -lfreetype -lc -limgui -lSceHid_stub \
+        -lScePower_stub -lSceCommonDialog_stub -lpng16 -lz -lSceAppmgr_stub
+AR = $(PREFIX)-ar
+RANLIB = $(PREFIX)-ranlib
+endif
 
 # -----------------------------------------------------------------------------
 # configuring compile-time definitions
@@ -107,11 +118,11 @@ DEBUG = -DDEBUG -g
 
 # OPTIONS = $(DEBUG) -Wall			# only for debugging purposes
 # OPTIONS = $(DEBUG) -O3 -Wall			# only for debugging purposes
-OPTIONS = $(DEBUG) -Wall			# only for debugging purposes
+#OPTIONS = $(DEBUG) -Wall			# only for debugging purposes
 # OPTIONS = $(DEBUG) -Wall -ansi -pedantic	# only for debugging purposes
 # OPTIONS = -O3 -Wall -ansi -pedantic
 # OPTIONS = -O3 -Wall
-# OPTIONS = -O3
+OPTIONS = -O3
 
 ifdef BUILD_DIST			# distribution build
 SYS_LDFLAGS := $(shell echo $(SYS_LDFLAGS) |	\
@@ -177,6 +188,11 @@ CNFS =	conf_gfx.h	\
 	conf_var.c	\
 	conf_act.c
 
+ifeq ($(TARGET),vita)
+SRCS += psp2/psp2-dirent.c
+OBJS += psp2-dirent.o
+endif
+
 CNFS_CMD = ../build-scripts/create_element_defs.pl
 
 TIMESTAMP_FILE = conftime.h
@@ -217,8 +233,28 @@ GRAPHICS_DIR = ../graphics
 # -----------------------------------------------------------------------------
 # build targets
 # -----------------------------------------------------------------------------
+ifeq ($(TARGET),vita)
+all: $(AUTOCONF) libgame_dir game_em_dir game_sp_dir game_mm_dir $(PROGNAME).vpk
 
+$(PROGNAME).vpk: $(PROGNAME).velf
+	vita-make-fself -s $< ../build/eboot.bin
+	vita-mksfoex -s TITLE_ID=$(VITA_TITLEID) "rocksndiamonds" param.sfo
+	mv param.sfo ../build/sce_sys/param.sfo
+
+	#------------ Comment this if you don't have 7zip ------------------
+	7z a -tzip $(PROGNAME).vpk -r ../build/sce_sys ../build/eboot.bin
+	#-------------------------------------------------------------------
+
+%.velf: %.elf
+	cp $< $<.unstripped.elf
+	$(PREFIX)-strip -g $<
+	vita-elf-create $< $@
+
+$(PROGNAME).elf: $(RNDLIBS) $(TIMESTAMP_FILE) $(OBJS) $(ICON)
+	$(CC) $(PROFILING) $(OBJS) $(ICON) $(RNDLIBS) $(LDFLAGS) -o $@
+else
 all: $(AUTOCONF) libgame_dir game_em_dir game_sp_dir game_mm_dir $(PROGNAME) graphics_dir
+endif
 
 $(PROGNAME): $(RNDLIBS) $(TIMESTAMP_FILE) $(OBJS) $(ICON)
 	$(CC) $(PROFILING) $(OBJS) $(ICON) $(RNDLIBS) $(LDFLAGS) -o $(PROGNAME)

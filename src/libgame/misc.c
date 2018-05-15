@@ -32,6 +32,12 @@
 #include "text.h"
 #include "image.h"
 
+#ifdef __vita__
+#undef PLATFORM_UNIX
+#define chmod(a,b)
+#define getuid()
+#define getpwuid()
+#endif
 
 /* ========================================================================= */
 /* some generic helper functions                                             */
