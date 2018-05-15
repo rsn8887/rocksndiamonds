@@ -1,0 +1,36 @@
+===============================================================================
+Compiling and installing Rocks'n'Diamonds
+===============================================================================
+
+To compile the game, you either need the new SDL2 library (recommended) or the
+old SDL 1.2 library. In addition, you also need the libraries SDL_image,
+SDL_mixer (including the SMPEG library if you want MP3 support) and SDL_net.
+
+Please install these libraries before building Rocks'n'Diamonds.
+
+
+-------------------------------------------------------------------------------
+Linux and other Unix systems (including Mac OS X):
+-------------------------------------------------------------------------------
+
+Just run "make" to build the game using either SDL2 or SDL (whatever being
+available).
+
+Run "make sdl" or "make sdl2" to explicitly use either SDL 1.2 or SDL2.
+
+
+-------------------------------------------------------------------------------
+Windows with gcc (native or cross-compiling)
+-------------------------------------------------------------------------------
+
+To build the game natively, just proceed as described above for Unix systems.
+
+To cross-compile the game for Windows, run "cross-win32". You probably have to
+adjust the path to the Windows cross-compiler defined in "CROSS_PATH_WIN32" in
+the top-level Makefile.
+
+
+That's all!
+
+If you have any comments, corrections or suggestions regarding the Makefiles,
+please let me know at "info@artsoft.org". Thanks!
