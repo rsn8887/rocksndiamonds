@@ -1692,6 +1692,27 @@ KeyMod GetKeyModStateFromEvents()
 void StartTextInput(int x, int y, int width, int height)
 {
 #if defined(TARGET_SDL2)
+#ifdef __vita__
+  char *text = kbdvita_get("Enter text:", "", 128);
+  int i=0;
+  while (text[i]!=0 && i<128) {
+    if (text[i]>='A' && text[i]<='Z')
+      text[i]+=32;
+    if (text[i]>=' ' && text[i]<='z') {
+      SDL_Event down_event;
+      down_event.type = SDL_KEYDOWN;
+      down_event.key.keysym.sym = text[i];
+      down_event.key.keysym.mod = 0;
+      SDL_PushEvent(&down_event);
+      SDL_Event up_event;
+      up_event.type = SDL_KEYUP;
+      up_event.key.keysym.sym = text[i];
+      up_event.key.keysym.mod = 0;
+      SDL_PushEvent(&up_event);
+    }
+    i++;
+  }
+#endif
 #if defined(HAS_SCREEN_KEYBOARD)
   SDL_StartTextInput();
 

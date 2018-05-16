@@ -93,7 +93,7 @@ SYS_LDFLAGS = $(SYS_CFLAGS) -lSDL2_image -lSDL2_mixer -lSDL2_net -lSDL2 -lvorbis
         -lSceAudio_stub -lSceLibKernel_stub -lSceDisplay_stub -lSceGxm_stub      \
         -lmikmod -lSceSysmodule_stub -lSceCtrl_stub -lSceTouch_stub -lm -lSceNet_stub \
         -lSceNetCtl_stub -lScePgf_stub -ljpeg -lfreetype -lc -limgui -lSceHid_stub \
-        -lScePower_stub -lSceCommonDialog_stub -lpng16 -lz -lSceAppmgr_stub
+        -lScePower_stub -lSceCommonDialog_stub -lSceAppUtil_stub -lpng16 -lz -lSceAppmgr_stub
 AR = $(PREFIX)-ar
 RANLIB = $(PREFIX)-ranlib
 endif
@@ -189,8 +189,11 @@ CNFS =	conf_gfx.h	\
 	conf_act.c
 
 ifeq ($(TARGET),vita)
-SRCS += psp2/psp2-dirent.c
+SRCS += psp2-dirent.c
+SRCS +=	psp2_kbdvita.c
+
 OBJS += psp2-dirent.o
+OBJS += psp2_kbdvita.o
 endif
 
 CNFS_CMD = ../build-scripts/create_element_defs.pl
