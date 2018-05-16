@@ -41,6 +41,7 @@ SDL_Thread	       *server_thread;
 
 #if defined(PLATFORM_VITA)
 int _newlib_heap_size_user = 192 * 1024 * 1024;
+#include <psp2/power.h> 
 #endif
 
 int			key_joystick_mapping = 0;
@@ -7752,6 +7753,10 @@ static void InitProgramConfig(char *command_filename)
 int main(int argc, char *argv[])
 {
 #if defined(PLATFORM_VITA)
+  scePowerSetArmClockFrequency(444);
+  scePowerSetGpuClockFrequency(222);
+  scePowerSetBusClockFrequency(222);
+  scePowerSetGpuXbarClockFrequency(222);
   InitProgramConfig("rocksndiamonds");
 #else
   InitProgramConfig(argv[0]);
