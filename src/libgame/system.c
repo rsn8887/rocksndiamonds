@@ -1692,7 +1692,7 @@ KeyMod GetKeyModStateFromEvents()
 void StartTextInput(int x, int y, int width, int height)
 {
 #if defined(TARGET_SDL2)
-#ifdef __vita__
+#if defined(PLATFORM_VITA)
   char *text = kbdvita_get("Enter text:", "", 128);
   int i=0;
   while (text[i]!=0 && i<128) {

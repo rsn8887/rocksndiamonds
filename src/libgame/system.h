@@ -468,8 +468,11 @@
 #define NOT_AVAILABLE		"(not available)"
 
 /* default value for undefined filename */
+#if defined(PLATFORM_VITA)
+#define UNDEFINED_FILENAME	"ux0:/data/rocksndiamonds/[NONE]"
+#else
 #define UNDEFINED_FILENAME	"[NONE]"
-
+#endif
 /* default value for undefined levelset */
 #define UNDEFINED_LEVELSET	"[NONE]"
 
@@ -548,8 +551,13 @@
 #define LOG_ERR_ID		1
 #define NUM_LOGS		2
 
+#if defined(PLATFORM_VITA)
+#define STRING_PARENT_DIRECTORY		".."
+#define STRING_TOP_DIRECTORY		"ux0:/data/rocksndiamonds/"
+#else
 #define STRING_PARENT_DIRECTORY		".."
 #define STRING_TOP_DIRECTORY		"/"
+#endif
 
 #define CHAR_PATH_SEPARATOR_UNIX	'/'
 #define CHAR_PATH_SEPARATOR_DOS		'\\'

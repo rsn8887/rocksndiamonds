@@ -29,13 +29,6 @@
 #include "misc.h"
 #include "hash.h"
 
-#ifdef __vita__
-#undef PLATFORM_UNIX
-#define chmod(a,b)
-#define getuid()
-#define getpwuid()
-#endif
-
 #define ENABLE_UNUSED_CODE	FALSE	/* for currently unused functions */
 
 #define NUM_LEVELCLASS_DESC	8
@@ -1411,6 +1404,8 @@ char *getHomeDir()
     if (!SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, 0, dir)))
       strcpy(dir, ".");
   }
+#elif defined(PLATFORM_VITA)
+  dir = "ux0:/data/rocksndiamonds";
 #elif defined(PLATFORM_UNIX)
   if (dir == NULL)
   {
@@ -1513,7 +1508,7 @@ static int posix_mkdir(const char *pathname, mode_t mode)
 
 static boolean posix_process_running_setgid()
 {
-#if defined(PLATFORM_UNIX)
+#if defined(PLATFORM_UNIX) && !defined(PLATFORM_VITA)
   return (getgid() != getegid());
 #else
   return FALSE;
@@ -1525,6 +1520,9 @@ void createDirectory(char *dir, char *text, int permission_class)
   if (directoryExists(dir))
     return;
 
+#if defined(PLATFORM_VITA)
+  mkdir(dir, 0);
+#else
   /* leave "other" permissions in umask untouched, but ensure group parts
      of USERDATA_DIR_MODE are not masked */
   mode_t dir_mode = (permission_class == PERMS_PRIVATE ?
@@ -1552,6 +1550,7 @@ void createDirectory(char *dir, char *text, int permission_class)
     chmod(dir, dir_mode);
 
   posix_umask(last_umask);		/* restore previous umask */
+#endif
 }
 
 void InitUserDataDirectory()
@@ -1561,6 +1560,7 @@ void InitUserDataDirectory()
 
 void SetFilePermissions(char *filename, int permission_class)
 {
+#if !defined(PLATFORM_VITA)
   int running_setgid = posix_process_running_setgid();
   int perms = (permission_class == PERMS_PRIVATE ?
 	       FILE_PERMS_PRIVATE : FILE_PERMS_PUBLIC);
@@ -1569,6 +1569,7 @@ void SetFilePermissions(char *filename, int permission_class)
     perms = FILE_PERMS_PUBLIC_ALL;
 
   chmod(filename, perms);
+#endif
 }
 
 char *getCookie(char *file_type)

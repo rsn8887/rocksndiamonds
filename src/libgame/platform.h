@@ -153,6 +153,11 @@
 #define PLATFORM_STRING "Android"
 #endif
 
+#if defined(__vita__)
+#define PLATFORM_VITA
+#undef  PLATFORM_STRING
+#define PLATFORM_STRING "Vita"
+#endif
 
 /* ========================================================================= */
 /* define additional target keywords                                         */
@@ -169,7 +174,7 @@
 /* this should better go into "system.h" or "features.h" (yet to be created) */
 /* ========================================================================= */
 
-#if defined(PLATFORM_UNIX) || defined(TARGET_SDL)
+#if (defined(PLATFORM_UNIX) || defined(TARGET_SDL)) && !defined(PLATFORM_VITA)
 #define NETWORK_AVALIABLE
 #endif
 

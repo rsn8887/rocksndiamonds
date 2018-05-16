@@ -32,13 +32,6 @@
 #include "text.h"
 #include "image.h"
 
-#ifdef __vita__
-#undef PLATFORM_UNIX
-#define chmod(a,b)
-#define getuid()
-#define getpwuid()
-#endif
-
 /* ========================================================================= */
 /* some generic helper functions                                             */
 /* ========================================================================= */
@@ -577,7 +570,7 @@ char *getLoginName()
     if (GetUserName(login_name, &buffer_size) == 0)
       strcpy(login_name, ANONYMOUS_NAME);
   }
-#elif defined(PLATFORM_UNIX) && !defined(PLATFORM_ANDROID)
+#elif defined(PLATFORM_UNIX) && !defined(PLATFORM_ANDROID) && !defined(PLATFORM_VITA)
   if (login_name == NULL)
   {
     struct passwd *pwd;
@@ -609,7 +602,7 @@ char *getRealName()
     else
       real_name = ANONYMOUS_NAME;
   }
-#elif defined(PLATFORM_UNIX) && !defined(PLATFORM_ANDROID)
+#elif defined(PLATFORM_UNIX) && !defined(PLATFORM_ANDROID) && !defined(PLATFORM_VITA)
   if (real_name == NULL)
   {
     struct passwd *pwd;
@@ -693,7 +686,11 @@ char *getBasePath(char *filename)
   {
     free(basepath);
 
+#if defined(PLATFORM_VITA)
+    return getStringCopy("ux0:/data/rocksndiamonds");
+#else
     return getStringCopy(".");
+#endif
   }
 
   /* separator found: strip basename */
@@ -746,7 +743,7 @@ char *getStringCat3(char *s1, char *s2, char *s3)
 
 char *getPath2(char *path1, char *path2)
 {
-#if defined(PLATFORM_ANDROID)
+#if defined(PLATFORM_ANDROID) || defined(PLATFORM_VITA)
   // workaround for reading from assets directory -- skip "." subdirs in path
   if (strEqual(path1, "."))
     return getStringCopy(path2);
@@ -759,7 +756,7 @@ char *getPath2(char *path1, char *path2)
 
 char *getPath3(char *path1, char *path2, char *path3)
 {
-#if defined(PLATFORM_ANDROID)
+#if defined(PLATFORM_ANDROID) || defined(PLATFORM_VITA)
   // workaround for reading from assets directory -- skip "." subdirs in path
   if (strEqual(path1, "."))
     return getStringCat2WithSeparator(path2, path3, STRING_PATH_SEPARATOR);

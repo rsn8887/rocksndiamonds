@@ -2386,7 +2386,7 @@ void HandleSpecialGameControllerButtons(Event *event)
 	HandleKey(KSYM_space, KEY_PRESSED);
       else if (event->cbutton.button == SDL_CONTROLLER_BUTTON_BACK)
 	HandleKey(KSYM_Escape, KEY_PRESSED);
-#ifdef __vita__
+#if defined(PLATFORM_VITA)
       // on Vita, allow triangle to act as Backspace to erase characters on name entry
       else if (event->cbutton.button == SDL_CONTROLLER_BUTTON_Y)
   HandleKey(KSYM_BackSpace, KEY_PRESSED);
@@ -2398,7 +2398,7 @@ void HandleSpecialGameControllerButtons(Event *event)
 	HandleKey(KSYM_space, KEY_RELEASED);
       else if (event->cbutton.button == SDL_CONTROLLER_BUTTON_BACK)
 	HandleKey(KSYM_Escape, KEY_RELEASED);
-#ifdef __vita__
+#if defined(PLATFORM_VITA)
       // on Vita, allow triangle to act as Backspace to erase characters on name entry
       else if (event->cbutton.button == SDL_CONTROLLER_BUTTON_Y)
   HandleKey(KSYM_BackSpace, KEY_RELEASED);

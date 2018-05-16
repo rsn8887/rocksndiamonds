@@ -468,7 +468,7 @@ void NetworkServer(int port, int serveronly)
   sact.sa_handler = SIG_IGN;
   sigemptyset(&sact.sa_mask);
   sact.sa_flags = 0;
-  #ifndef __vita__
+  #if !defined(PLATFORM_VITA)
   sigaction(SIGPIPE, &sact, NULL);
   #endif
 #endif

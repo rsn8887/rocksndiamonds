@@ -5979,7 +5979,7 @@ void OpenAll()
 
   if (options.serveronly)
   {
-#if defined(PLATFORM_UNIX)
+#if defined(PLATFORM_UNIX) && !defined(PLATFORM_VITA)
     NetworkServer(options.server_port, options.serveronly);
 #else
     Error(ERR_WARN, "networking only supported in Unix version");

@@ -73,7 +73,7 @@ sdl2:
 	@$(MAKE_CMD) TARGET=sdl2
 
 vita:
-	@$(MAKE_CMD) TARGET=vita
+	@$(MAKE_CMD) TARGET=vita PLATFORM=vita
 	
 
 mac:

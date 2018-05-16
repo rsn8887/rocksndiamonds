@@ -584,7 +584,11 @@ static boolean SDLCreateScreen(boolean fullscreen)
 
 #if defined(TARGET_SDL2)
 #if 1
+#if defined(PLATFORM_VITA)
+  int renderer_flags = SDL_RENDERER_ACCELERATED;
+#else
   int renderer_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE;
+#endif
 #else
   /* If SDL_CreateRenderer() is called from within a VirtualBox Windows VM
      _without_ enabling 2D/3D acceleration and/or guest additions installed,
@@ -986,7 +990,7 @@ void SDLSetScreenProperties()
 
 void SDLSetScreenRenderingMode(char *screen_rendering_mode)
 {
-#if defined(TARGET_SDL2)
+#if defined(TARGET_SDL2) && !defined(PLATFORM_VITA)
   video.screen_rendering_mode =
     (strEqual(screen_rendering_mode, STR_SPECIAL_RENDERING_BITMAP) ?
      SPECIAL_RENDERING_BITMAP :
@@ -2877,8 +2881,9 @@ void SDLInitJoysticks()
     }
 
 #if defined(TARGET_SDL2)
+// Vita has correct internal mappings
+#if !defined(PLATFORM_VITA)
     num_mappings = SDL_GameControllerAddMappingsFromFile(mappings_file_base);
-
     /* the included game controller base mappings should always be found */
     if (num_mappings == -1)
       Error(ERR_WARN, "no game controller base mappings found");
@@ -2901,6 +2906,7 @@ void SDLInitJoysticks()
 
     checked_free(mappings_file_base);
     checked_free(mappings_file_user);
+#endif
 
 #if DEBUG_JOYSTICKS
     for (i = 0; i < SDL_NumJoysticks(); i++)
