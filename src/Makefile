@@ -92,7 +92,7 @@ SYS_CFLAGS = -DTARGET_SDL2  -I$(VITASDK)/$(PREFIX)/include/SDL2 \
 SYS_LDFLAGS = $(SYS_CFLAGS) -lSDL2_image -lSDL2_mixer -lSDL2_net -lSDL2 -lvorbisfile -lvorbis -logg -lvita2d \
         -lSceAudio_stub -lSceLibKernel_stub -lSceDisplay_stub -lSceGxm_stub      \
         -lmikmod -lSceSysmodule_stub -lSceCtrl_stub -lSceTouch_stub -lm -lSceNet_stub \
-        -lSceNetCtl_stub -lScePgf_stub -ljpeg -lfreetype -lc -limgui -lSceHid_stub \
+        -lSceNetCtl_stub -lScePgf_stub -ljpeg -lfreetype -lc -lSceHid_stub \
         -lScePower_stub -lSceCommonDialog_stub -lSceAppUtil_stub -lpng16 -lz -lSceAppmgr_stub
 AR = $(PREFIX)-ar
 RANLIB = $(PREFIX)-ranlib
