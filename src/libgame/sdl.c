@@ -990,7 +990,9 @@ void SDLSetScreenProperties()
 
 void SDLSetScreenRenderingMode(char *screen_rendering_mode)
 {
-#if defined(TARGET_SDL2) && !defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA)
+  video.screen_rendering_mode = SPECIAL_RENDERING_OFF;
+#elif defined(TARGET_SDL2)
   video.screen_rendering_mode =
     (strEqual(screen_rendering_mode, STR_SPECIAL_RENDERING_BITMAP) ?
      SPECIAL_RENDERING_BITMAP :

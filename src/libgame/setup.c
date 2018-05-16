@@ -482,6 +482,7 @@ char *getProgramConfigFilename(char *command_filename)
   char *config_filename_2 = getStringCat2(command_filename_2, ".conf");
   char *config_filename_3 = getPath2(conf_directory, SETUP_FILENAME);
 
+#if !defined(PLATFORM_VITA)
   // 1st try: look for config file that exactly matches the binary filename
   if (fileExists(config_filename_1))
     return config_filename_1;
@@ -489,7 +490,7 @@ char *getProgramConfigFilename(char *command_filename)
   // 2nd try: look for config file that matches binary filename without suffix
   if (fileExists(config_filename_2))
     return config_filename_2;
-
+#endif
   // 3rd try: return setup config filename in global program config directory
   return config_filename_3;
 }
