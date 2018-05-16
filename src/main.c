@@ -7724,7 +7724,7 @@ static void InitProgramConfig(char *command_filename)
 
 #if defined(PLATFORM_WIN32) || defined(PLATFORM_MACOSX)
   userdata_subdir = program_title;
-#elif defined(PLATFORM_UNIX)
+#elif defined(PLATFORM_UNIX) && !defined(PLATFORM_VITA)
   userdata_subdir = userdata_subdir_unix;
 #else
   userdata_subdir = USERDATA_DIRECTORY_OTHER;
@@ -7752,7 +7752,7 @@ static void InitProgramConfig(char *command_filename)
 int main(int argc, char *argv[])
 {
 #if defined(PLATFORM_VITA)
-  InitProgramConfig("ux0:/data/rocksndiamonds/");
+  InitProgramConfig("rocksndiamonds");
 #else
   InitProgramConfig(argv[0]);
 #endif
