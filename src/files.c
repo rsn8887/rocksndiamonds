@@ -8851,7 +8851,7 @@ static void setSetupInfoToDefaults(struct SetupInfo *si)
 
   si->options.verbose = FALSE;
 
-#if defined(PLATFORM_ANDROID)
+#if defined(PLATFORM_ANDROID) || defined(PLATFORM_VITA)
   si->fullscreen = TRUE;
 #endif
 }

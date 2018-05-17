@@ -841,7 +841,7 @@ void BackToFront()
     int y1 = WIN_YSIZE;
     int x2 = 0;
     int y2 = 0;
-
+  
     if (redraw_mask & REDRAW_DOOR_1)
     {
       x1 = MIN(x1, DX);
@@ -849,7 +849,7 @@ void BackToFront()
       x2 = MAX(x2, DX + DXSIZE);
       y2 = MAX(y2, DY + DYSIZE);
     }
-
+  
     if (redraw_mask & REDRAW_DOOR_2)
     {
       x1 = MIN(x1, VX);
@@ -857,7 +857,7 @@ void BackToFront()
       x2 = MAX(x2, VX + VXSIZE);
       y2 = MAX(y2, VY + VYSIZE);
     }
-
+  
     if (redraw_mask & REDRAW_DOOR_3)
     {
       x1 = MIN(x1, EX);
@@ -865,14 +865,14 @@ void BackToFront()
       x2 = MAX(x2, EX + EXSIZE);
       y2 = MAX(y2, EY + EYSIZE);
     }
-
+  
     // make sure that at least one pixel is blitted, and inside the screen
     // (else nothing is blitted, causing the animations not to be updated)
     x1 = MIN(MAX(0, x1), WIN_XSIZE - 1);
     y1 = MIN(MAX(0, y1), WIN_YSIZE - 1);
     x2 = MIN(MAX(1, x2), WIN_XSIZE);
     y2 = MIN(MAX(1, y2), WIN_YSIZE);
-
+  
     BlitBitmap(backbuffer, window, x1, y1, x2 - x1, y2 - y1, x1, y1);
   }
 

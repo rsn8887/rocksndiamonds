@@ -106,6 +106,10 @@
 #define SCREEN_KEYBOARD_POS(h)		((h) / 2)
 #endif
 
+#if defined(PLATFORM_VITA)
+#define USE_COMPLETE_DISPLAY
+#endif
+
 
 /* default input keys */
 #define DEFAULT_KEY_LEFT		KSYM_Left

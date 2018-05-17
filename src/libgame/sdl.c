@@ -126,20 +126,34 @@ static void UpdateScreenExt(SDL_Rect *rect, boolean with_frame_delay)
   if (video.screen_rendering_mode == SPECIAL_RENDERING_TARGET)
     sdl_texture = sdl_texture_target;
 
+#if defined(PLATFORM_VITA)
+    //set the alpha channel to fully opaque
+    // int start = rect->x * bytes_x / 4 + rect->y * bytes_y / 4;
+    // int end = (rect->x + rect->w) * bytes_x / 4 + (rect->y + rect->h) * bytes_y / 4;
+    // Uint32 *pixels = screen->pixels; 
+    // for (int i = start; i < end; i++) {
+    //     pixels[i] |= (0xFF << 24);
+    // }
+    //set the alpha channel to fully opaque
+    Uint32 *pixels = screen->pixels; 
+    for (int i = 0; i < 560 * 672; i++) {
+        pixels[i] |= (0xFF << 24);
+    }
+    SDL_UpdateTexture(sdl_texture, NULL, pixels, screen->pitch);
+#else
   if (rect)
   {
     int bytes_x = screen->pitch / video.width;
     int bytes_y = screen->pitch;
 
     SDL_UpdateTexture(sdl_texture, rect,
-		      screen->pixels + rect->x * bytes_x + rect->y * bytes_y,
-		      screen->pitch);
+    screen->pixels + rect->x * bytes_x + rect->y * bytes_y, screen->pitch);
   }
   else
   {
     SDL_UpdateTexture(sdl_texture, NULL, screen->pixels, screen->pitch);
   }
-
+#endif
   int xoff = video.screen_xoffset;
   int yoff = video.screen_yoffset;
   SDL_Rect dst_rect_screen = { xoff, yoff, video.width, video.height };
@@ -667,11 +681,18 @@ static boolean SDLCreateScreen(boolean fullscreen)
       // SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
       SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, setup.window_scaling_quality);
 
+#if defined(PLATFORM_VITA)
+      // Vita SDL2 port only supports ABGR8888 textures 
+      sdl_texture_stream = SDL_CreateTexture(sdl_renderer,
+					     SDL_PIXELFORMAT_ABGR8888,
+					     SDL_TEXTUREACCESS_STREAMING,
+					     width, height);
+#else
       sdl_texture_stream = SDL_CreateTexture(sdl_renderer,
 					     SDL_PIXELFORMAT_ARGB8888,
 					     SDL_TEXTUREACCESS_STREAMING,
 					     width, height);
-
+#endif
       if (SDL_RenderTargetSupported(sdl_renderer))
 	sdl_texture_target = SDL_CreateTexture(sdl_renderer,
 					       SDL_PIXELFORMAT_ARGB8888,
@@ -680,10 +701,15 @@ static boolean SDLCreateScreen(boolean fullscreen)
 
       if (sdl_texture_stream != NULL)
       {
+#if defined(PLATFORM_VITA)
+  // Vita SDL2 port only supports ABGR8888 textures 
+  new_surface = SDL_CreateRGBSurface(0, width, height, 32, 0xFF, 0xFF << 8, 0xFF << 16, 0x00);
+  //new_surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+#else
 	// use SDL default values for RGB masks and no alpha channel
-	new_surface = SDL_CreateRGBSurface(0, width, height, 32, 0,0,0, 0);
-
-	if (new_surface == NULL)
+  new_surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+#endif
+    if (new_surface == NULL)
 	  Error(ERR_WARN, "SDL_CreateRGBSurface() failed: %s", SDL_GetError());
       }
       else
@@ -872,12 +898,18 @@ void SDLSetWindowScalingQuality(char *window_scaling_quality)
     return;
 
   SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, window_scaling_quality);
-
+#if defined(PLATFORM_VITA)
+  // Vita SDL2 only support ABGR8888
+  new_texture = SDL_CreateTexture(sdl_renderer,
+				  SDL_PIXELFORMAT_ABGR8888,
+				  SDL_TEXTUREACCESS_STREAMING,
+				  video.width, video.height);
+#else
   new_texture = SDL_CreateTexture(sdl_renderer,
 				  SDL_PIXELFORMAT_ARGB8888,
 				  SDL_TEXTUREACCESS_STREAMING,
 				  video.width, video.height);
-
+#endif
   if (new_texture != NULL)
   {
     SDL_DestroyTexture(sdl_texture_stream);
@@ -1095,8 +1127,8 @@ void SDLBlitTexture(Bitmap *bitmap,
   src_rect.w = width;
   src_rect.h = height;
 
-  dst_rect.x = dst_x;
-  dst_rect.y = dst_y;
+  dst_rect.x = dst_x + video.screen_xoffset;
+  dst_rect.y = dst_y + video.screen_yoffset;
   dst_rect.w = width;
   dst_rect.h = height;
 
