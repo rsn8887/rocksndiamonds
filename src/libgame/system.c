@@ -1689,11 +1689,32 @@ KeyMod GetKeyModStateFromEvents()
   return HandleKeyModState(KSYM_UNDEFINED, 0);
 }
 
+#if defined(PLATFORM_VITA)
+static int can_use_IME_keyboard = 1;
+#endif
+
 void StartTextInput(int x, int y, int width, int height)
 {
 #if defined(TARGET_SDL2)
 #if defined(PLATFORM_VITA)
-  char *text = kbdvita_get("Enter text:", "", 128);
+  if (!can_use_IME_keyboard)
+    return;
+  // Vita IME doesn't signal backspace presses
+  // so erase any text that might have been in the input field first
+  can_use_IME_keyboard = 0;
+  for (int i = 0; i < 50; i++) {
+    SDL_Event down_event;
+    down_event.type = SDL_KEYDOWN;
+    down_event.key.keysym.sym = SDLK_BACKSPACE;
+    down_event.key.keysym.mod = 0;
+    SDL_PushEvent(&down_event);
+    SDL_Event up_event;
+    up_event.type = SDL_KEYUP;
+    up_event.key.keysym.sym = SDLK_BACKSPACE;
+    up_event.key.keysym.mod = 0;
+    SDL_PushEvent(&up_event);
+  }
+  char *text = kbdvita_get("Enter New Text:", "", 128);
   int i=0;
   while (text[i]!=0 && i<128) {
     if (text[i]>='A' && text[i]<='Z')
@@ -1712,6 +1733,16 @@ void StartTextInput(int x, int y, int width, int height)
     }
     i++;
   }
+  SDL_Event down_event;
+  down_event.type = SDL_KEYDOWN;
+  down_event.key.keysym.sym = SDLK_RETURN;
+  down_event.key.keysym.mod = 0;
+  SDL_PushEvent(&down_event);
+  SDL_Event up_event;
+  up_event.type = SDL_KEYUP;
+  up_event.key.keysym.sym = SDLK_RETURN;
+  up_event.key.keysym.mod = 0;
+  SDL_PushEvent(&up_event);
 #endif
 #if defined(HAS_SCREEN_KEYBOARD)
   SDL_StartTextInput();
@@ -1729,6 +1760,9 @@ void StartTextInput(int x, int y, int width, int height)
 void StopTextInput()
 {
 #if defined(TARGET_SDL2)
+#if defined(PLATFORM_VITA)
+  can_use_IME_keyboard = 1;
+#endif
 #if defined(HAS_SCREEN_KEYBOARD)
   SDL_StopTextInput();
 
