@@ -243,10 +243,13 @@ $(PROGNAME).vpk: $(PROGNAME).velf
 	vita-make-fself -s $< ../build/eboot.bin
 	vita-mksfoex -s TITLE_ID=$(VITA_TITLEID) "rocksndiamonds" param.sfo
 	mv param.sfo ../build/sce_sys/param.sfo
+	cp -r ../psp2data/* ../build/
 
 	#------------ Comment this if you don't have 7zip ------------------
-	7z a -tzip $(PROGNAME).vpk -r ../build/sce_sys ../build/eboot.bin
+	7z a -tzip $(PROGNAME).vpk -r ../build/*
 	#-------------------------------------------------------------------
+	zip -d $(PROGNAME).vpk *.DS_Store
+	zip -d $(PROGNAME).vpk *__MAC*
 
 %.velf: %.elf
 	cp $< $<.unstripped.elf
