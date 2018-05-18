@@ -1524,7 +1524,6 @@ void SetMouseCursor(int mode)
   cursor_new = (mode == CURSOR_DEFAULT   ? NULL :
 		mode == CURSOR_NONE      ? cursor_none :
 		mode == CURSOR_PLAYFIELD ? cursor_playfield : NULL);
-
   SDLSetMouseCursor(cursor_new);
 
   gfx.cursor_mode = mode;
@@ -1584,7 +1583,11 @@ boolean PendingEvent(void)
 
 void WaitEvent(Event *event)
 {
+#if defined(PLATFORM_VITA)
+  PSP2_WaitEvent(event);
+#else
   SDLWaitEvent(event);
+#endif
 }
 
 void PeekEvent(Event *event)

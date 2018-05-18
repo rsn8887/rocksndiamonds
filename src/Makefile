@@ -191,9 +191,13 @@ CNFS =	conf_gfx.h	\
 ifeq ($(TARGET),vita)
 SRCS += psp2-dirent.c
 SRCS +=	psp2_kbdvita.c
+SRCS +=	psp2_input.c
+SRCS +=	psp2_touch.c
 
 OBJS += psp2-dirent.o
 OBJS += psp2_kbdvita.o
+OBJS += psp2_input.o
+OBJS += psp2_touch.o
 endif
 
 CNFS_CMD = ../build-scripts/create_element_defs.pl

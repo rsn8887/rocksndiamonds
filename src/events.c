@@ -22,7 +22,6 @@
 #include "anim.h"
 #include "network.h"
 
-
 #define	DEBUG_EVENTS		0
 
 #define DEBUG_EVENTS_BUTTON	(DEBUG_EVENTS	* 0)

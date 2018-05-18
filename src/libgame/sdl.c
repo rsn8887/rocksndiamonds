@@ -15,6 +15,45 @@
 #include "misc.h"
 #include "setup.h"
 
+#if defined(PLATFORM_VITA)
+#include "../psp2_input.h"
+extern int lastmx, lastmy; // mouse pointer coordinates
+int old_lastmx = 0, old_lastmy = 0;
+int ranalog_x = 0, ranalog_y = 0; // joystick values for pointer control
+SDL_Texture *vita_mousepointer;
+extern int vita_mousepointer_visible;
+const char *cursor_image_vita[] =
+{
+  /* width height num_colors chars_per_pixel */
+  "    16    16        3            1",
+
+  /* colors */
+  "X c #000000",
+  ". c #ffffff",
+  "  c None",
+
+  /* pixels */
+  "XX              ",
+  "X.X             ",
+  "X..X            ",
+  "X...X           ",
+  "X....X          ",
+  "X.....X         ",
+  "X......X        ",
+  "X.......X       ",
+  "X........X      ",
+  "X.....XXXX      ",
+  "X..X..X         ",
+  "X.X X..X        ",
+  "XX  X..X        ",
+  "     X..X       ",
+  "     X..X       ",
+  "      XX        ",
+  /* hot spot */
+  "1,1"
+};
+#endif
+
 #define ENABLE_UNUSED_CODE	0	/* currently unused functions */
 
 #define DEBUG_JOYSTICKS		0
@@ -227,6 +266,25 @@ static void UpdateScreenExt(SDL_Rect *rect, boolean with_frame_delay)
     SDL_RenderCopy(sdl_renderer, sdl_texture_target, src_rect2, dst_rect2);
   }
 
+#if defined(PLATFORM_VITA)
+  int x, y;
+  PSP2_HandleJoystickMouse(ranalog_x, ranalog_y);
+  if (lastmx > 960) lastmx = 960;
+  if (lastmx < 0) lastmx = 0;
+  if (lastmy > 544) lastmy = 544;
+  if (lastmy < 0) lastmy = 0;
+  if (lastmx != old_lastmx || lastmy != old_lastmy) {
+    SDL_WarpMouseInWindow(sdl_window, lastmx, lastmy);
+    old_lastmx = lastmx;
+    old_lastmy = lastmy;
+  }
+  if (vita_mousepointer_visible) {
+    SDL_GetMouseState(&x, &y);
+    SDL_Rect dst_rect = { x, y, MIN(16, 960 - x), MIN(16, 544 - y) };
+    SDL_Rect src_rect = { 0, 0, MIN(16, 960 - x), MIN(16, 544 - y) };
+    SDL_RenderCopy(sdl_renderer, vita_mousepointer, &src_rect, &dst_rect);
+  }
+#endif
 #if defined(USE_TOUCH_INPUT_OVERLAY)
   // draw overlay graphics for touch device input, if needed
   DrawTouchInputOverlay();
@@ -538,6 +596,10 @@ inline static void SDLInitVideoBuffer_VideoBuffer(boolean fullscreen)
 #if defined(TARGET_SDL2)
   // SDL 2.0: support for (desktop) fullscreen mode available
   video.fullscreen_available = TRUE;
+#if defined(PLATFORM_VITA)
+  // disable fullscreen on Vita
+  video.fullscreen_available = FALSE;
+#endif
 #else
   // SDL 1.2: no support for fullscreen mode in R'n'D anymore
   video.fullscreen_available = FALSE;
@@ -704,7 +766,11 @@ static boolean SDLCreateScreen(boolean fullscreen)
 #if defined(PLATFORM_VITA)
   // Vita SDL2 port only supports ABGR8888 textures 
   new_surface = SDL_CreateRGBSurface(0, width, height, 32, 0xFF, 0xFF << 8, 0xFF << 16, 0x00);
-  //new_surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+  // Vita mouse pointer
+  //SDL_Surface *temp = IMG_Load("ux0:/data/rocksndiamonds/vitapointer.png");  
+  SDL_Surface *temp = IMG_ReadXPMFromArray((char **) cursor_image_vita);
+  vita_mousepointer = SDL_CreateTextureFromSurface(sdl_renderer, temp);
+  SDL_FreeSurface(temp);
 #else
 	// use SDL default values for RGB masks and no alpha channel
   new_surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
@@ -2736,6 +2802,23 @@ static void setJoystickAxis(int nr, int axis_id_raw, int axis_value)
 
   if (axis_id == -1)
     return;
+
+#if defined(PLATFORM_VITA)
+  // right analog = mouse on Vita
+  //if (nr == 1) 
+  //{
+    if (axis_id_raw == SDL_CONTROLLER_AXIS_RIGHTY)
+    {
+      ranalog_y = axis_value;
+      return;
+    }
+    else if (axis_id_raw == SDL_CONTROLLER_AXIS_RIGHTX)
+    {
+      ranalog_x = axis_value;
+      return;
+    }
+  //}
+#endif
 
   // prevent (slightly jittering, but centered) axis A from resetting axis B
   if (ABS(axis_value) < JOYSTICK_PERCENT * JOYSTICK_MAX_AXIS_POS / 100 &&
