@@ -166,19 +166,32 @@ static void UpdateScreenExt(SDL_Rect *rect, boolean with_frame_delay)
     sdl_texture = sdl_texture_target;
 
 #if defined(PLATFORM_VITA)
-    //set the alpha channel to fully opaque
-    // int start = rect->x * bytes_x / 4 + rect->y * bytes_y / 4;
-    // int end = (rect->x + rect->w) * bytes_x / 4 + (rect->y + rect->h) * bytes_y / 4;
-    // Uint32 *pixels = screen->pixels; 
-    // for (int i = start; i < end; i++) {
-    //     pixels[i] |= (0xFF << 24);
-    // }
-    //set the alpha channel to fully opaque
-    Uint32 *pixels = screen->pixels; 
-    for (int i = 0; i < 560 * 672; i++) {
-        pixels[i] |= (0xFF << 24);
+  Uint32 *surfacepixels = screen->pixels;
+  Uint32 *texturepixels;
+  int texturepitch;
+  if (rect)
+  {
+    int start = rect->y * screen->pitch / 4 + rect->x;
+    int end =  (rect->y + rect->h) * screen->pitch / 4 + rect->x + rect->w;
+    // this factor of 4 for the vertical is a bug in Vita SDL2
+    rect->y *= 4;
+    SDL_LockTexture(sdl_texture, rect, (void**)&texturepixels, &texturepitch);
+    for (int i = start; i < end; i++) {
+        texturepixels[i-start] = surfacepixels[i] | (0xFF << 24);
     }
-    SDL_UpdateTexture(sdl_texture, NULL, pixels, screen->pitch);
+    SDL_UnlockTexture(sdl_texture);
+    rect->y /= 4;
+  }
+  else 
+  {
+    // this factor of 4 for the vertical is a bug in Vita SDL2
+    SDL_Rect dest_rect = {0, 0, screen->w, screen->h * 4};
+    SDL_LockTexture(sdl_texture, &dest_rect, (void**)&texturepixels, &texturepitch);
+    for (int i = 0; i < (screen->w * screen->h); i++) {
+      texturepixels[i] = surfacepixels[i] | (0xFF << 24);
+    }
+    SDL_UnlockTexture(sdl_texture);
+  }
 #else
   if (rect)
   {
@@ -1193,10 +1206,14 @@ void SDLBlitTexture(Bitmap *bitmap,
   src_rect.w = width;
   src_rect.h = height;
 
-  dst_rect.x = dst_x + video.screen_xoffset;
-  dst_rect.y = dst_y + video.screen_yoffset;
+  dst_rect.x = dst_x;
+  dst_rect.y = dst_y;
   dst_rect.w = width;
   dst_rect.h = height;
+#if defined(PLATFORM_VITA)
+  dst_rect.x += video.screen_xoffset;
+  dst_rect.y += video.screen_yoffset;
+#endif
 
   SDL_RenderCopy(sdl_renderer, texture, &src_rect, &dst_rect);
 #endif

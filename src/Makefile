@@ -88,7 +88,7 @@ endif
 
 ifeq ($(TARGET),vita)			# compiling for Vita target
 SYS_CFLAGS = -DTARGET_SDL2  -I$(VITASDK)/$(PREFIX)/include/SDL2 \
-        -Wl,-q -Wall -Wno-unused-variable
+        -Wl,-q -Wall -Wno-unused-variable -O3
 SYS_LDFLAGS = $(SYS_CFLAGS) -lSDL2_image -lSDL2_mixer -lSDL2_net -lSDL2 -lvorbisfile -lvorbis -logg -lmikmod -lvita2d \
         -lSceAudio_stub -lSceLibKernel_stub -lSceDisplay_stub -lSceGxm_stub      \
         -lmikmod -lSceSysmodule_stub -lSceCtrl_stub -lSceTouch_stub -lm -lSceNet_stub \
