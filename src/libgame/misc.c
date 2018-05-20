@@ -687,7 +687,7 @@ char *getBasePath(char *filename)
     free(basepath);
 
 #if defined(PLATFORM_VITA)
-    return getStringCopy("ux0:/data/rocksndiamonds");
+    return getStringCopy(RW_GAME_DIR);
 #else
     return getStringCopy(".");
 #endif

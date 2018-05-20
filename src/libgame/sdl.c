@@ -282,19 +282,25 @@ static void UpdateScreenExt(SDL_Rect *rect, boolean with_frame_delay)
 #if defined(PLATFORM_VITA)
   int x, y;
   PSP2_HandleJoystickMouse(ranalog_x, ranalog_y);
-  if (lastmx > 960) lastmx = 960;
+  int max_x = (960 * 100) / video.window_scaling_percent;
+  int max_y = (544 * 100) / video.window_scaling_percent;
+  if (lastmx > max_x) lastmx = max_x;
   if (lastmx < 0) lastmx = 0;
-  if (lastmy > 544) lastmy = 544;
+  if (lastmy > max_y) lastmy = max_y;
   if (lastmy < 0) lastmy = 0;
   if (lastmx != old_lastmx || lastmy != old_lastmy) {
-    SDL_WarpMouseInWindow(sdl_window, lastmx, lastmy);
+    //Warp mouse causes problems with window scaling other than 100%
+    //SDL_WarpMouseInWindow(sdl_window, lastmx, lastmy);
     old_lastmx = lastmx;
     old_lastmy = lastmy;
   }
   if (vita_mousepointer_visible) {
-    SDL_GetMouseState(&x, &y);
-    SDL_Rect dst_rect = { x, y, MIN(16, 960 - x), MIN(16, 544 - y) };
-    SDL_Rect src_rect = { 0, 0, MIN(16, 960 - x), MIN(16, 544 - y) };
+    //GetMouse causes problems with window scaling other than 100%
+    //SDL_GetMouseState(&x, &y);
+    x = lastmx;
+    y = lastmy;
+    SDL_Rect dst_rect = { x, y, MIN(16, max_x - x), MIN(16, max_y - y) };
+    SDL_Rect src_rect = { 0, 0, MIN(16, max_x - x), MIN(16, max_y - y) };
     SDL_RenderCopy(sdl_renderer, vita_mousepointer, &src_rect, &dst_rect);
   }
 #endif

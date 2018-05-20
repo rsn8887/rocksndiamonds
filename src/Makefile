@@ -29,8 +29,10 @@ WINDRES = windres
 
 CONVERT_ICON_ARGS = -transparent black -background transparent
 
+ifneq ($(TARGET),vita)
 PROGBASE = rocksndiamonds
 PROGNAME = ../$(PROGBASE)
+endif
 
 EDITION ?= default
 
@@ -244,13 +246,13 @@ ifeq ($(TARGET),vita)
 all: $(AUTOCONF) libgame_dir game_em_dir game_sp_dir game_mm_dir $(PROGNAME).vpk
 
 $(PROGNAME).vpk: $(PROGNAME).velf
-	vita-make-fself -s $< ../build/eboot.bin
-	vita-mksfoex -s TITLE_ID=$(VITA_TITLEID) "rocksndiamonds" param.sfo
-	mv param.sfo ../build/sce_sys/param.sfo
-	cp -r ../psp2data/* ../build/
+	vita-make-fself -s $< ../build/$(PROGBASE)/eboot.bin
+	vita-mksfoex -s TITLE_ID=$(VITA_TITLEID) $(PROGBASE) param.sfo
+	mv param.sfo ../build/$(PROGBASE)/sce_sys/param.sfo
+	cp -r ../psp2data/$(PROGBASE)/* ../build/$(PROGBASE)/
 
 	#------------ Comment this if you don't have 7zip ------------------
-	7z a -tzip $(PROGNAME).vpk -r ../build/*
+	7z a -tzip $(PROGNAME).vpk -r ../build/$(PROGBASE)/*
 	#-------------------------------------------------------------------
 	zip -d $(PROGNAME).vpk *.DS_Store
 	zip -d $(PROGNAME).vpk *__MAC*

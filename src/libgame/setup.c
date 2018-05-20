@@ -1406,7 +1406,7 @@ char *getHomeDir()
       strcpy(dir, ".");
   }
 #elif defined(PLATFORM_VITA)
-  dir = "ux0:/data/rocksndiamonds";
+  dir = RW_GAME_DIR;
 #elif defined(PLATFORM_UNIX)
   if (dir == NULL)
   {

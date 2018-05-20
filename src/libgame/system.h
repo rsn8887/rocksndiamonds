@@ -481,7 +481,7 @@
 
 /* default value for undefined filename */
 #if defined(PLATFORM_VITA)
-#define UNDEFINED_FILENAME	"ux0:/data/rocksndiamonds/[NONE]"
+#define UNDEFINED_FILENAME	RW_GAME_DIR"/[NONE]"
 #else
 #define UNDEFINED_FILENAME	"[NONE]"
 #endif
@@ -565,7 +565,7 @@
 
 #if defined(PLATFORM_VITA)
 #define STRING_PARENT_DIRECTORY		".."
-#define STRING_TOP_DIRECTORY		"ux0:/data/rocksndiamonds/"
+#define STRING_TOP_DIRECTORY		RW_GAME_DIR"/"
 #else
 #define STRING_PARENT_DIRECTORY		".."
 #define STRING_TOP_DIRECTORY		"/"

@@ -13,10 +13,10 @@
 # configuration
 # -----------------------------------------------------------------------------
 #Vita specific
-VITA_TITLEID           := ROCKS0000
+VITA_TITLEID           := MIRROR000
 GIT_VERSION := $(shell git describe --abbrev=6 --dirty --always --tags)
 PREFIX = arm-vita-eabi
-PROGBASE = rocksndiamonds
+PROGBASE = mirrormagic
 PROGNAME = ../$(PROGBASE)
 # command name of your favorite ANSI C compiler
 # (this must be set to "cc" for some systems)
