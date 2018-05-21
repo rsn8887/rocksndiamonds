@@ -8980,7 +8980,6 @@ void ToggleFullscreenOrChangeWindowScalingIfNeeded()
   if (change_window_scaling_percent)
   {
     SDLSetWindowScaling(setup.window_scaling_percent);
-
     return;
   }
   else if (change_fullscreen)

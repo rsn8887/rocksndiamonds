@@ -963,15 +963,18 @@ void SDLSetWindowScaling(int window_scaling_percent)
     return;
 
   float window_scaling_factor = (float)window_scaling_percent / 100;
+  video.window_scaling_percent = window_scaling_percent;
+#if defined(PLATFORM_VITA)
+  SDLSetScreenSizeAndOffsets(video.width, video.height);
+  SDLSetScreenSizeForRenderer(video.screen_width, video.screen_height);
+#endif
   int new_window_width  = (int)(window_scaling_factor * video.screen_width);
   int new_window_height = (int)(window_scaling_factor * video.screen_height);
 
   SDL_SetWindowSize(sdl_window, new_window_width, new_window_height);
 
-  video.window_scaling_percent = window_scaling_percent;
   video.window_width  = new_window_width;
   video.window_height = new_window_height;
-
   SetWindowTitle();
 }
 
@@ -1067,6 +1070,17 @@ void SDLSetScreenSizeAndOffsets(int width, int height)
   video.screen_yoffset = 0;
 
 #if defined(USE_COMPLETE_DISPLAY)
+#if defined(PLATFORM_VITA)
+  video.screen_width = video.display_width;
+  video.screen_height = video.display_height;
+  video.screen_xoffset = ((video.screen_width * 100) / video.window_scaling_percent - width) / 2;
+  video.screen_yoffset = ((video.screen_height * 100) / video.window_scaling_percent - height) / 2;
+  if (video.window_scaling_percent < 100) {
+    // open a larger canvas to accomodate both the centered small window and mousepointer
+    video.screen_width = (video.display_width * 100) / video.window_scaling_percent;
+    video.screen_height = (video.display_height * 100) / video.window_scaling_percent;
+  }
+#else
   float ratio_video   = (float) width / height;
   float ratio_display = (float) video.display_width / video.display_height;
 
@@ -1081,7 +1095,6 @@ void SDLSetScreenSizeAndOffsets(int width, int height)
 
     video.screen_xoffset = (video.screen_width  - width)  / 2;
     video.screen_yoffset = (video.screen_height - height) / 2;
-
 #if 0
     Error(ERR_DEBUG, "Changing screen from %dx%d to %dx%d (%.2f to %.2f)",
 	  width, height,
@@ -1089,6 +1102,7 @@ void SDLSetScreenSizeAndOffsets(int width, int height)
 	  ratio_video, ratio_display);
 #endif
   }
+#endif
 #endif
 }
 
