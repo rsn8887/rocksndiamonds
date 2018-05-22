@@ -12,15 +12,9 @@
 # -----------------------------------------------------------------------------
 # configuration
 # -----------------------------------------------------------------------------
-#Vita specific
-VITA_TITLEID           := ROCKS0000
-GIT_VERSION := $(shell git describe --abbrev=6 --dirty --always --tags)
-PREFIX = arm-vita-eabi
-PROGBASE = rocksndiamonds
-PROGNAME = ../$(PROGBASE)
 # command name of your favorite ANSI C compiler
 # (this must be set to "cc" for some systems)
-CC = $(PREFIX)-gcc
+CC = gcc
 # command name of GNU make on your system
 # (this must be set to "gmake" for some systems)
 MAKE = make
@@ -31,7 +25,6 @@ MAKE = make
 # RO_GAME_DIR = .
 # use the following setting for Debian / Ubuntu installations:
 # RO_GAME_DIR = /usr/share/games/rocksndiamonds
-RO_GAME_DIR = ux0:/data/$(PROGBASE)
 
 # directory for writable game data (like highscore files)
 # (if no "scores" directory exists, scores are saved in user data directory)
@@ -39,7 +32,6 @@ RO_GAME_DIR = ux0:/data/$(PROGBASE)
 # RW_GAME_DIR = .
 # use the following setting for Debian / Ubuntu installations:
 # RW_GAME_DIR = /var/games/rocksndiamonds
-RW_GAME_DIR = ux0:/data/$(PROGBASE)
 
 # uncomment if system has no joystick include file
 # JOYSTICK = -DNO_JOYSTICK
@@ -74,9 +66,25 @@ sdl:
 sdl2:
 	@$(MAKE_CMD) TARGET=sdl2
 
-vita:
+vitarocks:	VITA_TITLEID := ROCKS0000
+vitarocks:	PREFIX = arm-vita-eabi
+vitarocks:	CC = $(PREFIX)-gcc
+vitarocks:	PROGBASE = rocksndiamonds
+vitarocks:	PROGNAME = ../$(PROGBASE)
+vitarocks:	RO_GAME_DIR = ux0:/data/$(PROGBASE)
+vitarocks:	RW_GAME_DIR = ux0:/data/$(PROGBASE)
+vitarocks:
 	@$(MAKE_CMD) TARGET=vita PLATFORM=vita
 	
+vitamirror:	VITA_TITLEID := MIRROR000
+vitamirror:	PREFIX = arm-vita-eabi
+vitamirror:	CC = $(PREFIX)-gcc
+vitamirror:	PROGBASE = mirrormagic
+vitamirror:	PROGNAME = ../$(PROGBASE)
+vitamirror:	RO_GAME_DIR = ux0:/data/$(PROGBASE)
+vitamirror:	RW_GAME_DIR = ux0:/data/$(PROGBASE)
+vitamirror:
+	@$(MAKE_CMD) TARGET=vita PLATFORM=vita
 
 mac:
 	@$(MAKE_CMD) PLATFORM=macosx

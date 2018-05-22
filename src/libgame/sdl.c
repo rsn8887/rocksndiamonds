@@ -1076,7 +1076,7 @@ void SDLSetScreenSizeAndOffsets(int width, int height)
   video.screen_xoffset = ((video.screen_width * 100) / video.window_scaling_percent - width) / 2;
   video.screen_yoffset = ((video.screen_height * 100) / video.window_scaling_percent - height) / 2;
   if (video.window_scaling_percent < 100) {
-    // open a larger canvas to accomodate both the centered small window and mousepointer
+    // open a larger canvas to accomodate both the centered small windowp and mousepointer
     video.screen_width = (video.display_width * 100) / video.window_scaling_percent;
     video.screen_height = (video.display_height * 100) / video.window_scaling_percent;
   }
