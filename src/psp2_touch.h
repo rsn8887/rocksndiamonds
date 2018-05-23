@@ -43,7 +43,7 @@ unsigned int _simulatedClickStartTime[SCE_TOUCH_PORT_MAX_NUM][2]; // initiation 
 static void preprocessFingerDown(SDL_Event *event);
 static void preprocessFingerUp(SDL_Event *event);
 static void preprocessFingerMotion(SDL_Event *event);
-static void finishSimulatedMouseClicks(void);
+void finishSimulatedMouseClicks(void);
 
 #ifdef __cplusplus
 }

@@ -35,7 +35,6 @@ void psp2HandleTouch(SDL_Event *event) {
 		psp2InitTouch();
 		touch_initialized = 1;
 	}
-	finishSimulatedMouseClicks();
 	preprocessEvents(event);
 }
 
@@ -146,6 +145,7 @@ static void preprocessFingerUp(SDL_Event *event) {
 
 							event->type = SDL_MOUSEBUTTONDOWN;
 							event->button.button = simulatedButton;
+							event->button.state = SDL_PRESSED;
 							event->button.x = x;
 							event->button.y = y;
 						}
@@ -161,6 +161,7 @@ static void preprocessFingerUp(SDL_Event *event) {
 				}
 				event->type = SDL_MOUSEBUTTONUP;
 				event->button.button = simulatedButton;
+				event->button.state = SDL_RELEASED;
 				event->button.x = x;
 				event->button.y = y;
 				_multiFingerDragging[port] = DRAG_NONE;
@@ -226,6 +227,7 @@ static void preprocessFingerMotion(SDL_Event *event) {
 					SDL_Event ev;
 					ev.type = SDL_MOUSEBUTTONDOWN;
 					ev.button.button = simulatedButton;
+					ev.button.state = SDL_PRESSED;
 					ev.button.x = mouseDownX;
 					ev.button.y = mouseDownY;
 					SDL_PushEvent(&ev);
@@ -258,7 +260,7 @@ static void preprocessFingerMotion(SDL_Event *event) {
 	}
 }
 
-static void finishSimulatedMouseClicks() {
+void finishSimulatedMouseClicks() {
 	for (int port = 0; port < SCE_TOUCH_PORT_MAX_NUM; port++) {
 		for (int i = 0; i < 2; i++) {
 			if (_simulatedClickStartTime[port][i] != 0) {
@@ -273,6 +275,7 @@ static void finishSimulatedMouseClicks() {
 					SDL_Event ev;
 					ev.type = SDL_MOUSEBUTTONUP;
 					ev.button.button = simulatedButton;
+					ev.button.state = SDL_RELEASED;
 					ev.button.x = lastmx;
 					ev.button.y = lastmy;
 					SDL_PushEvent(&ev);

@@ -322,6 +322,8 @@ static void UpdateScreenExt(SDL_Rect *rect, boolean with_frame_delay)
 #if defined(PLATFORM_VITA)
   int x, y;
   PSP2_HandleJoystickMouse(ranalog_x, ranalog_y);
+  // Once per frame, need to ensure touch-based simulated clicks are finished
+  finishSimulatedMouseClicks();
   int max_x = (960 * 100) / video.window_scaling_percent;
   int max_y = (544 * 100) / video.window_scaling_percent;
   if (lastmx > max_x) lastmx = max_x;

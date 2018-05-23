@@ -54,7 +54,7 @@ int PSP2_WaitEvent(SDL_Event *event) {
 				}
 				break;
 			case SDL_JOYBUTTONUP:
-				if (event->jbutton.which==0) {// Only Joystick 0 controls the game
+				if (event->jbutton.which==0) {// Only Joystick 0 controls the mouse
 					switch (event->jbutton.button) {
 						case PAD_L: // intentional fall-through
 						case PAD_SQUARE:
