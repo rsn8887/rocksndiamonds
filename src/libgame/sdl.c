@@ -17,10 +17,78 @@
 
 #if defined(PLATFORM_VITA)
 #include "../psp2_input.h"
+#include "vita2d.h"
 extern int lastmx, lastmy; // mouse pointer coordinates
 int old_lastmx = 0, old_lastmy = 0;
 int ranalog_x = 0, ranalog_y = 0; // joystick values for pointer control
 SDL_Texture *vita_mousepointer;
+// these three internal structures from SDL2 are needed to gain access to the raw
+// vita2d_texture pointer and be able to set the hw-filter to "linear" to make the
+// sharp-bilinear-simple shader work correctly
+#ifndef VITA_TEXTUREDATA
+#define VITA_TEXTUREDATA
+
+typedef struct SDL_SW_YUVTexture
+{
+  Uint32 format;
+  Uint32 target_format;
+  int w, h;
+  Uint8 *pixels;
+  int *colortab;
+  Uint32 *rgb_2_pix;
+  void (*Display1X) (int *colortab, Uint32 * rgb_2_pix,
+  unsigned char *lum, unsigned char *cr,
+  unsigned char *cb, unsigned char *out,
+  int rows, int cols, int mod);
+  void (*Display2X) (int *colortab, Uint32 * rgb_2_pix,
+  unsigned char *lum, unsigned char *cr,
+  unsigned char *cb, unsigned char *out,
+  int rows, int cols, int mod);
+
+  /* These are just so we don't have to allocate them separately */
+  Uint16 pitches[3];
+  Uint8 *planes[3];
+
+  /* This is a temporary surface in case we have to stretch copy */
+  SDL_Surface *stretch;
+  SDL_Surface *display;
+} SDL_SW_YUVTexture;
+
+/* Define the SDL texture structure */
+typedef struct SDL_Texture
+{
+  const void *magic;
+  Uint32 format;              /**< The pixel format of the texture */
+  int access;                 /**< SDL_TextureAccess */
+  int w;                      /**< The width of the texture */
+  int h;                      /**< The height of the texture */
+  int modMode;                /**< The texture modulation mode */
+  SDL_BlendMode blendMode;    /**< The texture blend mode */
+  Uint8 r, g, b, a;           /**< Texture modulation values */
+
+  SDL_Renderer *renderer;
+
+  /* Support for formats not supported directly by the renderer */
+  SDL_Texture *native;
+  SDL_SW_YUVTexture *yuv;
+  void *pixels;
+  int pitch;
+  SDL_Rect locked_rect;
+
+  void *driverdata;           /**< Driver specific texture representation */
+
+  SDL_Texture *prev;
+  SDL_Texture *next;
+} SDL_Texture;
+
+typedef struct VITA_TextureData
+{
+  vita2d_texture	*tex;
+  unsigned int	pitch;
+  unsigned int	w;
+  unsigned int	h;
+} VITA_TextureData;
+#endif
 extern int vita_mousepointer_visible;
 const char *cursor_image_vita[] =
 {
@@ -165,34 +233,6 @@ static void UpdateScreenExt(SDL_Rect *rect, boolean with_frame_delay)
   if (video.screen_rendering_mode == SPECIAL_RENDERING_TARGET)
     sdl_texture = sdl_texture_target;
 
-#if defined(PLATFORM_VITA)
-  Uint32 *surfacepixels = screen->pixels;
-  Uint32 *texturepixels;
-  int texturepitch;
-  if (rect)
-  {
-    int start = rect->y * screen->pitch / 4 + rect->x;
-    int end =  (rect->y + rect->h) * screen->pitch / 4 + rect->x + rect->w;
-    // this factor of 4 for the vertical is a bug in Vita SDL2
-    rect->y *= 4;
-    SDL_LockTexture(sdl_texture, rect, (void**)&texturepixels, &texturepitch);
-    for (int i = start; i < end; i++) {
-        texturepixels[i-start] = surfacepixels[i] | (0xFF << 24);
-    }
-    SDL_UnlockTexture(sdl_texture);
-    rect->y /= 4;
-  }
-  else 
-  {
-    // this factor of 4 for the vertical is a bug in Vita SDL2
-    SDL_Rect dest_rect = {0, 0, screen->w, screen->h * 4};
-    SDL_LockTexture(sdl_texture, &dest_rect, (void**)&texturepixels, &texturepitch);
-    for (int i = 0; i < (screen->w * screen->h); i++) {
-      texturepixels[i] = surfacepixels[i] | (0xFF << 24);
-    }
-    SDL_UnlockTexture(sdl_texture);
-  }
-#else
   if (rect)
   {
     int bytes_x = screen->pitch / video.width;
@@ -205,7 +245,7 @@ static void UpdateScreenExt(SDL_Rect *rect, boolean with_frame_delay)
   {
     SDL_UpdateTexture(sdl_texture, NULL, screen->pixels, screen->pitch);
   }
-#endif
+
   int xoff = video.screen_xoffset;
   int yoff = video.screen_yoffset;
   SDL_Rect dst_rect_screen = { xoff, yoff, video.width, video.height };
@@ -768,6 +808,14 @@ static boolean SDLCreateScreen(boolean fullscreen)
 					     SDL_PIXELFORMAT_ABGR8888,
 					     SDL_TEXTUREACCESS_STREAMING,
 					     width, height);
+      // On Vita, make sure alpha channel is ignored when rendering this texture
+      // this fixes the black screen problem on Vita in an efficient way.
+      VITA_TextureData *vita_texture = (VITA_TextureData *) sdl_texture_stream->driverdata;
+      SceGxmTextureFilter min_filter = vita2d_texture_get_min_filter(vita_texture->tex);
+      SceGxmTextureFilter mag_filter = vita2d_texture_get_mag_filter(vita_texture->tex);
+      vita2d_free_texture(vita_texture->tex);
+      vita_texture->tex = vita2d_create_empty_texture_format(width, height, SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1BGR);
+      vita2d_texture_set_filters(vita_texture->tex, min_filter, mag_filter);
 #else
       sdl_texture_stream = SDL_CreateTexture(sdl_renderer,
 					     SDL_PIXELFORMAT_ARGB8888,
@@ -992,6 +1040,14 @@ void SDLSetWindowScalingQuality(char *window_scaling_quality)
 				  SDL_PIXELFORMAT_ABGR8888,
 				  SDL_TEXTUREACCESS_STREAMING,
 				  video.width, video.height);
+  // On Vita, make sure alpha channel is ignored when rendering this texture
+  // this fixes the black screen problem on Vita in an efficient way.
+  VITA_TextureData *vita_texture = (VITA_TextureData *) new_texture->driverdata;
+  SceGxmTextureFilter min_filter = vita2d_texture_get_min_filter(vita_texture->tex);
+  SceGxmTextureFilter mag_filter = vita2d_texture_get_mag_filter(vita_texture->tex);
+  vita2d_free_texture(vita_texture->tex);
+  vita_texture->tex = vita2d_create_empty_texture_format(video.width, video.height, SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1BGR);
+  vita2d_texture_set_filters(vita_texture->tex, min_filter, mag_filter);
 #else
   new_texture = SDL_CreateTexture(sdl_renderer,
 				  SDL_PIXELFORMAT_ARGB8888,
