@@ -237,7 +237,13 @@ static void UpdateScreenExt(SDL_Rect *rect, boolean with_frame_delay)
   {
     int bytes_x = screen->pitch / video.width;
     int bytes_y = screen->pitch;
-
+/* uncomment this slow loop to make R'n'D work on Vita3k
+    Uint32 *pixels = screen->pixels;
+    int start = rect->x + rect->y * bytes_y / 4;
+    int end = (rect->x + rect-> w) * bytes_x / 4 + (rect->y + rect->h) * bytes_y / 4;
+    for (int i = start; i < end - rect->w; i++)
+      pixels[i] |= 0xFF << 24;
+*/
     SDL_UpdateTexture(sdl_texture, rect,
     screen->pixels + rect->x * bytes_x + rect->y * bytes_y, screen->pitch);
   }
@@ -323,7 +329,7 @@ static void UpdateScreenExt(SDL_Rect *rect, boolean with_frame_delay)
   int x, y;
   PSP2_HandleJoystickMouse(ranalog_x, ranalog_y);
   // Once per frame, need to ensure touch-based simulated clicks are finished
-  finishSimulatedMouseClicks();
+  PSP2_FinishSimulatedMouseClicks();
   int max_x = (960 * 100) / video.window_scaling_percent;
   int max_y = (544 * 100) / video.window_scaling_percent;
   if (lastmx > max_x) lastmx = max_x;
@@ -815,6 +821,7 @@ static boolean SDLCreateScreen(boolean fullscreen)
       VITA_TextureData *vita_texture = (VITA_TextureData *) sdl_texture_stream->driverdata;
       SceGxmTextureFilter min_filter = vita2d_texture_get_min_filter(vita_texture->tex);
       SceGxmTextureFilter mag_filter = vita2d_texture_get_mag_filter(vita_texture->tex);
+      // comment out the following line to make R'n'D work on Vita3k
       vita2d_free_texture(vita_texture->tex);
       vita_texture->tex = vita2d_create_empty_texture_format(width, height, SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1BGR);
       vita2d_texture_set_filters(vita_texture->tex, min_filter, mag_filter);
@@ -1047,6 +1054,7 @@ void SDLSetWindowScalingQuality(char *window_scaling_quality)
   VITA_TextureData *vita_texture = (VITA_TextureData *) new_texture->driverdata;
   SceGxmTextureFilter min_filter = vita2d_texture_get_min_filter(vita_texture->tex);
   SceGxmTextureFilter mag_filter = vita2d_texture_get_mag_filter(vita_texture->tex);
+  // comment out the following line to make R'n'D work with Vita3k
   vita2d_free_texture(vita_texture->tex);
   vita_texture->tex = vita2d_create_empty_texture_format(video.width, video.height, SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1BGR);
   vita2d_texture_set_filters(vita_texture->tex, min_filter, mag_filter);

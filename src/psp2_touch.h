@@ -10,7 +10,8 @@
 extern "C" {
 #endif
 
-void psp2HandleTouch(SDL_Event *event);
+static void initTouch();
+void PSP2_HandleTouch(SDL_Event *event);
 static void preprocessEvents(SDL_Event *event);
 enum {
 	MAX_NUM_FINGERS = 3, // number of fingers to track per panel
@@ -43,7 +44,7 @@ unsigned int _simulatedClickStartTime[SCE_TOUCH_PORT_MAX_NUM][2]; // initiation 
 static void preprocessFingerDown(SDL_Event *event);
 static void preprocessFingerUp(SDL_Event *event);
 static void preprocessFingerMotion(SDL_Event *event);
-void finishSimulatedMouseClicks(void);
+void PSP2_FinishSimulatedMouseClicks(void);
 
 #ifdef __cplusplus
 }

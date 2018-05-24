@@ -15,7 +15,7 @@ extern int lastmx;
 extern int lastmy;
 static int touch_initialized = 0;
 
-static void psp2InitTouch() {
+static void initTouch() {
 	for (int port = 0; port < SCE_TOUCH_PORT_MAX_NUM; port++) {
 		for (int i = 0; i < MAX_NUM_FINGERS; i++) {
 			_finger[port][i].id = -1;
@@ -30,9 +30,9 @@ static void psp2InitTouch() {
 	}
 }
 
-void psp2HandleTouch(SDL_Event *event) {
+void PSP2_HandleTouch(SDL_Event *event) {
 	if (!touch_initialized) {
-		psp2InitTouch();
+		initTouch();
 		touch_initialized = 1;
 	}
 	preprocessEvents(event);
@@ -260,7 +260,7 @@ static void preprocessFingerMotion(SDL_Event *event) {
 	}
 }
 
-void finishSimulatedMouseClicks() {
+void PSP2_FinishSimulatedMouseClicks() {
 	for (int port = 0; port < SCE_TOUCH_PORT_MAX_NUM; port++) {
 		for (int i = 0; i < 2; i++) {
 			if (_simulatedClickStartTime[port][i] != 0) {

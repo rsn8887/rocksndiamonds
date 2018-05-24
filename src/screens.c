@@ -3814,8 +3814,11 @@ void HandleTypeName(int newxpos, Key key)
     strcpy(last_player_name, setup.player_name);
 
     xpos = newxpos;
-
+#if defined(PLATFORM_VITA)
+	PSP2_StartTextInput(setup.player_name, 0);
+#else
     StartTextInput(startx, starty, pos->width, pos->height);
+#endif
   }
   else if (is_valid_key_char && xpos < MAX_PLAYER_NAME_LEN)
   {

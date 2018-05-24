@@ -4,16 +4,18 @@
 
 int lastmx = 0;
 int lastmy = 0;
-int hiresDX = 0;
-int hiresDY = 0;
-int holding_R = 0;
 int vita_mousepointer_visible = 1;
+static int hiresDX = 0;
+static int hiresDY = 0;
+static int holding_R = 0;
+static int can_use_IME_keyboard = 1;
+
 
 int PSP2_WaitEvent(SDL_Event *event) {
 
 	int ret = SDL_WaitEvent(event);
 	if(event != NULL) {
-		psp2HandleTouch(event);
+		PSP2_HandleTouch(event);
 		switch (event->type) {
 			case SDL_MOUSEMOTION:
 				lastmx = event->motion.x;
@@ -127,4 +129,93 @@ void rescaleAnalog(int *x, int *y, int dead) {
 		*x = 0;
 		*y = 0;
 	}
+}
+
+void PSP2_StartTextInput(char *initial_text, int multiline) {
+	if (!can_use_IME_keyboard)
+	return;
+
+	can_use_IME_keyboard = 0;
+	char *text = kbdvita_get("Enter New Text:", initial_text, 600, multiline);
+	if (text != NULL)
+	{
+		if (multiline) {
+			// prevent mouse button state from locking the cursor while virtual keys are entered
+			SDL_Event ev1;
+			ev1.type = SDL_MOUSEBUTTONUP;
+			ev1.button.button = SDL_BUTTON_RIGHT;
+			ev1.button.state = SDL_RELEASED;
+			ev1.button.x = lastmx;
+			ev1.button.y = lastmy;
+			SDL_PushEvent(&ev1);
+			SDL_Event ev2;
+			ev2.type = SDL_MOUSEBUTTONUP;
+			ev2.button.button = SDL_BUTTON_LEFT;
+			ev2.button.state = SDL_RELEASED;
+			ev2.button.x = lastmx;
+			ev2.button.y = lastmy;
+			SDL_PushEvent(&ev2);
+		}
+		// the max textarea size is 30x20, which is 600 chars max
+		for (int i = 0; i < 600; i++) {
+			SDL_Event down_event;
+			down_event.type = SDL_KEYDOWN;
+			down_event.key.keysym.sym = SDLK_BACKSPACE;
+			down_event.key.keysym.mod = 0;
+			SDL_PushEvent(&down_event);
+			SDL_Event up_event;
+			up_event.type = SDL_KEYUP;
+			up_event.key.keysym.sym = SDLK_BACKSPACE;
+			up_event.key.keysym.mod = 0;
+			SDL_PushEvent(&up_event);
+		}
+		for (int i = 0; i < 600; i++) {
+			SDL_Event down_event;
+			down_event.type = SDL_KEYDOWN;
+			down_event.key.keysym.sym = SDLK_DELETE;
+			down_event.key.keysym.mod = 0;
+			SDL_PushEvent(&down_event);
+			SDL_Event up_event;
+			up_event.type = SDL_KEYUP;
+			up_event.key.keysym.sym = SDLK_DELETE;
+			up_event.key.keysym.mod = 0;
+			SDL_PushEvent(&up_event);
+		}
+		int i=0;
+		while (text[i]!=0 && i<600) {
+			if (text[i]>='A' && text[i]<='Z')
+				text[i]+=32;
+			// convert lf to return
+			if (text[i]==10)
+				text[i]=SDLK_RETURN;
+			SDL_Event down_event;
+			down_event.type = SDL_KEYDOWN;
+			down_event.key.keysym.sym = text[i];
+			down_event.key.keysym.mod = 0;
+			SDL_PushEvent(&down_event);
+			SDL_Event up_event;
+			up_event.type = SDL_KEYUP;
+			up_event.key.keysym.sym = text[i];
+			up_event.key.keysym.mod = 0;
+			SDL_PushEvent(&up_event);
+			i++;
+		}
+	}
+	// append return to single-line text entry
+	if (!multiline) {
+		SDL_Event down_event;
+		down_event.type = SDL_KEYDOWN;
+		down_event.key.keysym.sym = SDLK_RETURN;
+		down_event.key.keysym.mod = 0;
+		SDL_PushEvent(&down_event);
+		SDL_Event up_event;
+		up_event.type = SDL_KEYUP;
+		up_event.key.keysym.sym = SDLK_RETURN;
+		up_event.key.keysym.mod = 0;
+		SDL_PushEvent(&up_event);
+	}
+}
+
+void PSP2_StopTextInput() {
+	can_use_IME_keyboard = 1;
 }

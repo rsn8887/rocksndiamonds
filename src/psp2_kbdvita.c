@@ -64,13 +64,19 @@ void utf8_to_utf16(uint8_t *src, uint16_t *dst) {
 	*dst = '\0';
 }
 
-int initImeDialog(char *title, char *initial_text, int max_text_length, int type, int option) {
+int initImeDialog(char *title, const char *initial_text, int max_text_length, int type, int option) {
 	if (ime_dialog_running)
 		return -1;
 
 	// Convert UTF8 to UTF16
+	memset(ime_title_utf16, 0, sizeof(ime_title_utf16));
+	memset(ime_initial_text_utf16, 0, sizeof(ime_initial_text_utf16));
 	utf8_to_utf16((uint8_t *)title, ime_title_utf16);
 	utf8_to_utf16((uint8_t *)initial_text, ime_initial_text_utf16);
+
+	//clear previous results
+	memset(ime_input_text_utf16, 0, sizeof(ime_input_text_utf16));
+	memset(ime_input_text_utf8, 0, sizeof(ime_input_text_utf8));
 
 	SceImeDialogParam param;
 	sceImeDialogParamInit(&param);
@@ -118,7 +124,7 @@ int updateImeDialog() {
 		sceImeDialogGetResult(&result);
 
 		if ((ime_dialog_option == SCE_IME_OPTION_MULTILINE && result.button == SCE_IME_DIALOG_BUTTON_CLOSE) ||
-			(ime_dialog_option != SCE_IME_OPTION_MULTILINE && result.button == SCE_IME_DIALOG_BUTTON_ENTER)) {
+			(ime_dialog_option != SCE_IME_OPTION_MULTILINE && (result.button == SCE_IME_DIALOG_BUTTON_ENTER || result.button == SCE_IME_DIALOG_BUTTON_CLOSE))) {
 			// Convert UTF16 to UTF8
 			utf16_to_utf8(ime_input_text_utf16, ime_input_text_utf8);
 		} else {
@@ -133,7 +139,7 @@ int updateImeDialog() {
 	return status;
 }
 
-char *kbdvita_get(char *title, char *initial_text, int maxLen) {
+char *kbdvita_get(char *title, const char *initial_text, int maxLen, int multiline) {
 	char *name = NULL;
 
 	if (ime_init_apputils == 0) {
@@ -141,8 +147,10 @@ char *kbdvita_get(char *title, char *initial_text, int maxLen) {
 		sceCommonDialogSetConfigParam(&(SceCommonDialogConfigParam){});
 		ime_init_apputils = 1;
 	}
-
-	initImeDialog(title, initial_text, maxLen, SCE_IME_TYPE_BASIC_LATIN, 0);
+	if (multiline)
+	  initImeDialog(title, initial_text, maxLen, SCE_IME_TYPE_BASIC_LATIN, SCE_IME_OPTION_MULTILINE);
+	else
+	  initImeDialog(title, initial_text, maxLen, SCE_IME_TYPE_BASIC_LATIN, 0);
 
 	bool done;
 	do {

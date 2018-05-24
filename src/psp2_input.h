@@ -10,7 +10,8 @@ extern "C" {
 int PSP2_WaitEvent(SDL_Event *event);
 
 void PSP2_HandleJoystickMouse(int analogX, int analogY);
-
+void PSP2_StartTextInput(char *initial_text, int multiline);
+void PSP2_StopTextInput();
 //SDLKey getKey(Uint8 button);
 void rescaleAnalog(int *x, int *y, int dead);
 
