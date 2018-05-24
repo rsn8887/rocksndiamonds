@@ -1,5 +1,6 @@
 #include "psp2_input.h"
 #include "psp2_touch.h"
+#include "psp2_kbdvita.h"
 #include <math.h>
 
 int lastmx = 0;

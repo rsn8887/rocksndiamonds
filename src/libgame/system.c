@@ -20,6 +20,9 @@
 #include "setup.h"
 #include "joystick.h"
 #include "misc.h"
+#if defined(PLATFORM_VITA)
+#include "psp2_input.h"
+#endif
 
 #define ENABLE_UNUSED_CODE	0	/* currently unused functions */
 

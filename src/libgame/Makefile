@@ -39,6 +39,21 @@ OBJS =	system.o	\
 	misc.o		\
 	sdl.o
 
+SRCS_VITA = psp2-dirent.c \
+	psp2_kbdvita.c \
+	psp2_input.c \
+	psp2_touch.c
+
+OBJS_VITA = psp2-dirent.o \
+	psp2_kbdvita.o \
+	psp2_input.o \
+	psp2_touch.o
+
+ifeq ($(TARGET),vita)
+SRCS += $(SRCS_VITA)
+OBJS += $(OBJS_VITA)
+endif
+
 LIBGAME = libgame.a
 
 
@@ -58,7 +73,7 @@ $(LIBGAME): $(OBJS)
 clean:
 	$(RM) $(OBJS)
 	$(RM) $(LIBGAME)
-
+	$(RM) $(OBJS_VITA)
 
 # -----------------------------------------------------------------------------
 # development only

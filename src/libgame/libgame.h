@@ -26,5 +26,8 @@
 #include "image.h"
 #include "setup.h"
 #include "misc.h"
+#if defined(PLATFORM_VITA)
+#include "psp2_input.h"
+#endif
 
 #endif /* LIBGAME_H */

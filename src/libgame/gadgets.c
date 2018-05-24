@@ -15,7 +15,9 @@
 #include "gadgets.h"
 #include "text.h"
 #include "misc.h"
-
+#if defined(PLATFORM_VITA)
+#include "psp2_input.h"
+#endif
 
 /* values for DrawGadget() */
 #define DG_UNPRESSED		0

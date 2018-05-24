@@ -6,14 +6,47 @@
 
 #include "math.h"
 
-typedef int bool;
-#define false 0;
-#define true 1;
+static void initTouch();
+static void preprocessEvents(SDL_Event *event);
+static void preprocessFingerDown(SDL_Event *event);
+static void preprocessFingerUp(SDL_Event *event);
+static void preprocessFingerMotion(SDL_Event *event);
 
 static int psp2RearTouch = 0; // always disable rear_touch for now
 extern int lastmx;
 extern int lastmy;
 static int touch_initialized = 0;
+unsigned int _simulatedClickStartTime[SCE_TOUCH_PORT_MAX_NUM][2]; // initiation time of last simulated left or right click (zero if no click)
+
+enum {
+	MAX_NUM_FINGERS = 3, // number of fingers to track per panel
+	MAX_TAP_TIME = 250, // taps longer than this will not result in mouse click events
+	MAX_TAP_MOTION_DISTANCE = 10, // max distance finger motion in Vita screen pixels to be considered a tap
+	SIMULATED_CLICK_DURATION = 50, // time in ms how long simulated mouse clicks should be
+}; // track three fingers per panel
+
+typedef struct {
+	int id; // -1: no touch
+	Uint32 timeLastDown;
+	int lastX; // last known screen coordinates
+	int lastY; // last known screen coordinates
+	float lastDownX; // SDL touch coordinates when last pressed down
+	float lastDownY; // SDL touch coordinates when last pressed down
+} Touch;
+
+Touch _finger[SCE_TOUCH_PORT_MAX_NUM][MAX_NUM_FINGERS]; // keep track of finger status
+
+typedef enum DraggingType {
+	DRAG_NONE = 0,
+	DRAG_TWO_FINGER,
+	DRAG_THREE_FINGER,
+} DraggingType;
+
+DraggingType _multiFingerDragging[SCE_TOUCH_PORT_MAX_NUM]; // keep track whether we are currently drag-and-dropping
+
+typedef int bool;
+#define false 0;
+#define true 1;
 
 static void initTouch() {
 	for (int port = 0; port < SCE_TOUCH_PORT_MAX_NUM; port++) {

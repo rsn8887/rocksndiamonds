@@ -16,7 +16,8 @@
 #include "setup.h"
 
 #if defined(PLATFORM_VITA)
-#include "../psp2_input.h"
+#include "psp2_input.h"
+#include "psp2_touch.h"
 #include "vita2d.h"
 extern int lastmx, lastmy; // mouse pointer coordinates
 int old_lastmx = 0, old_lastmy = 0;
@@ -237,7 +238,8 @@ static void UpdateScreenExt(SDL_Rect *rect, boolean with_frame_delay)
   {
     int bytes_x = screen->pitch / video.width;
     int bytes_y = screen->pitch;
-/* uncomment this slow loop to make R'n'D work on Vita3k
+/*
+    //uncomment this slow loop to make R'n'D work on Vita3k
     Uint32 *pixels = screen->pixels;
     int start = rect->x + rect->y * bytes_y / 4;
     int end = (rect->x + rect-> w) * bytes_x / 4 + (rect->y + rect->h) * bytes_y / 4;
@@ -1054,7 +1056,7 @@ void SDLSetWindowScalingQuality(char *window_scaling_quality)
   VITA_TextureData *vita_texture = (VITA_TextureData *) new_texture->driverdata;
   SceGxmTextureFilter min_filter = vita2d_texture_get_min_filter(vita_texture->tex);
   SceGxmTextureFilter mag_filter = vita2d_texture_get_mag_filter(vita_texture->tex);
-  // comment out the following line to make R'n'D work with Vita3k
+  //comment out the following line to make R'n'D work with Vita3k
   vita2d_free_texture(vita_texture->tex);
   vita_texture->tex = vita2d_create_empty_texture_format(video.width, video.height, SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1BGR);
   vita2d_texture_set_filters(vita_texture->tex, min_filter, mag_filter);

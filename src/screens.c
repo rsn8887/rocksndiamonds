@@ -23,7 +23,6 @@
 #include "init.h"
 #include "config.h"
 
-
 #define DEBUG_JOYSTICKS		0
 
 
