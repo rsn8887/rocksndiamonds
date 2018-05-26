@@ -10,7 +10,8 @@ static int hiresDX = 0;
 static int hiresDY = 0;
 static int holding_R = 0;
 static int can_use_IME_keyboard = 1;
-
+static unsigned int focus_change_key = SDLK_F9;
+static int can_change_focus = 1;
 
 int PSP2_WaitEvent(SDL_Event *event) {
 
@@ -26,8 +27,7 @@ int PSP2_WaitEvent(SDL_Event *event) {
 			case SDL_JOYBUTTONDOWN:
 				if (event->jbutton.which==0) { // Only Joystick 0 controls the mouse
 					switch (event->jbutton.button) {
-						case PAD_L: // intentional fall-through
-						case PAD_SQUARE:
+						case PAD_L:
 							event->type = SDL_MOUSEBUTTONDOWN;
 							event->button.button = SDL_BUTTON_LEFT;
 							event->button.state = SDL_PRESSED;
@@ -35,13 +35,56 @@ int PSP2_WaitEvent(SDL_Event *event) {
 							event->button.y = lastmy;
 							break;
 						case PAD_R:
-							holding_R = 1; // intentional fall-through
-						case PAD_TRIANGLE:
+							holding_R = 1;
 							event->type = SDL_MOUSEBUTTONDOWN;
 							event->button.button = SDL_BUTTON_RIGHT;
 							event->button.state = SDL_PRESSED;
 							event->button.x = lastmx;
 							event->button.y = lastmy;
+							break;
+						case PAD_SQUARE:
+							if (holding_R) {
+								if (can_change_focus) {
+									// set focus to previous player
+									if (focus_change_key > SDLK_F5 && focus_change_key <= SDLK_F8)
+										focus_change_key--;
+									else if (focus_change_key == SDLK_F5)
+										focus_change_key = SDLK_F9;
+									event->type = SDL_KEYDOWN;
+									event->key.keysym.sym = focus_change_key;
+									event->key.keysym.mod = 0;
+									event->key.repeat = 0;
+									can_change_focus = 0;
+								}
+							} else {
+								event->type = SDL_MOUSEBUTTONDOWN;
+								event->button.button = SDL_BUTTON_LEFT;
+								event->button.state = SDL_PRESSED;
+								event->button.x = lastmx;
+								event->button.y = lastmy;
+							}
+							break;
+						case PAD_TRIANGLE:
+							if (holding_R) {
+								if (can_change_focus) {
+									// R+Triangle: set focus to next player
+									if (focus_change_key >= SDLK_F5 && focus_change_key < SDLK_F8)
+										focus_change_key++;
+									else if (focus_change_key == SDLK_F9)
+										focus_change_key = SDLK_F5;
+									event->type = SDL_KEYDOWN;
+									event->key.keysym.sym = focus_change_key;
+									event->key.keysym.mod = 0;
+									event->key.repeat = 0;
+									can_change_focus = 0;
+								}
+							} else {
+								event->type = SDL_MOUSEBUTTONDOWN;
+								event->button.button = SDL_BUTTON_RIGHT;
+								event->button.state = SDL_PRESSED;
+								event->button.x = lastmx;
+								event->button.y = lastmy;
+							}
 							break;
 						case PAD_UP: // intentional fall-through
 						case PAD_DOWN:
@@ -59,8 +102,7 @@ int PSP2_WaitEvent(SDL_Event *event) {
 			case SDL_JOYBUTTONUP:
 				if (event->jbutton.which==0) {// Only Joystick 0 controls the mouse
 					switch (event->jbutton.button) {
-						case PAD_L: // intentional fall-through
-						case PAD_SQUARE:
+						case PAD_L:
 							event->type = SDL_MOUSEBUTTONUP;
 							event->button.button = SDL_BUTTON_LEFT;
 							event->button.state = SDL_RELEASED;
@@ -68,13 +110,48 @@ int PSP2_WaitEvent(SDL_Event *event) {
 							event->button.y = lastmy;
 							break;
 						case PAD_R:
-							holding_R = 0; // intentional fall-through
-						case PAD_TRIANGLE:
+							holding_R = 0;
 							event->type = SDL_MOUSEBUTTONUP;
 							event->button.button = SDL_BUTTON_RIGHT;
 							event->button.state = SDL_RELEASED;
 							event->button.x = lastmx;
 							event->button.y = lastmy;
+							break;
+						case PAD_SQUARE:
+							if (holding_R) {
+								if (!can_change_focus) {
+									// release focus key
+									event->type = SDL_KEYUP;
+									event->key.keysym.sym = focus_change_key;
+									event->key.keysym.mod = 0;
+									event->key.repeat = 0;
+									can_change_focus = 1;
+								}
+							} else {
+								event->type = SDL_MOUSEBUTTONUP;
+								event->button.button = SDL_BUTTON_LEFT;
+								event->button.state = SDL_RELEASED;
+								event->button.x = lastmx;
+								event->button.y = lastmy;
+							}
+							break;
+						case PAD_TRIANGLE:
+							if (holding_R) {
+								if (!can_change_focus) {
+									// release focus key
+									event->type = SDL_KEYUP;
+									event->key.keysym.sym = focus_change_key;
+									event->key.keysym.mod = 0;
+									event->key.repeat = 0;
+									can_change_focus = 1;
+								}
+							} else {
+								event->type = SDL_MOUSEBUTTONUP;
+								event->button.button = SDL_BUTTON_RIGHT;
+								event->button.state = SDL_RELEASED;
+								event->button.x = lastmx;
+								event->button.y = lastmy;
+							}
 							break;
 						default:
 							break;
