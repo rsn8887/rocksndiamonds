@@ -22,6 +22,9 @@
 #include "network.h"
 #include "init.h"
 #include "config.h"
+#if defined(PLATFORM_VITA)
+#include "vita2d.h"
+#endif
 
 #define DEBUG_JOYSTICKS		0
 
@@ -339,6 +342,9 @@ static struct
   {	30,	"Very Slow"			},
   {	25,	"Slow"				},
   {	20,	"Normal"			},
+#if defined(PLATFORM_VITA)
+  {	16,	"60 fps"			},
+#endif
   {	15,	"Fast"				},
   {	10,	"Very Fast"			},
 #else
@@ -4615,6 +4621,15 @@ static void execSetupGame_setGameSpeeds()
   }
 
   setup.game_frame_delay = atoi(game_speed_current->identifier);
+
+#if defined(PLATFORM_VITA)
+  // Vsync is required for perfectly smooth gameplay on Vita in 60fps mode
+  if (setup.game_frame_delay == 16) {
+    vita2d_set_vblank_wait(SDL_TRUE);
+  } else {
+    vita2d_set_vblank_wait(SDL_FALSE);
+  }
+#endif
 
   /* needed for displaying game speed text instead of identifier */
   game_speed_text = game_speed_current->name;
