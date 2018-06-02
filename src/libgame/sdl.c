@@ -827,6 +827,11 @@ static boolean SDLCreateScreen(boolean fullscreen)
       vita2d_free_texture(vita_texture->tex);
       vita_texture->tex = vita2d_create_empty_texture_format(width, height, SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1BGR);
       vita2d_texture_set_filters(vita_texture->tex, min_filter, mag_filter);
+      if (setup.game_frame_delay == 16) {
+        vita2d_set_vblank_wait(SDL_TRUE);
+      } else {
+        vita2d_set_vblank_wait(SDL_FALSE);
+      }
 #else
       sdl_texture_stream = SDL_CreateTexture(sdl_renderer,
 					     SDL_PIXELFORMAT_ARGB8888,
@@ -1060,6 +1065,12 @@ void SDLSetWindowScalingQuality(char *window_scaling_quality)
   vita2d_free_texture(vita_texture->tex);
   vita_texture->tex = vita2d_create_empty_texture_format(video.width, video.height, SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1BGR);
   vita2d_texture_set_filters(vita_texture->tex, min_filter, mag_filter);
+  if (setup.game_frame_delay == 16) {
+    vita2d_set_vblank_wait(SDL_TRUE);
+  } else {
+    vita2d_set_vblank_wait(SDL_FALSE);
+  }
+
 #else
   new_texture = SDL_CreateTexture(sdl_renderer,
 				  SDL_PIXELFORMAT_ARGB8888,

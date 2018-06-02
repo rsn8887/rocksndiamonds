@@ -4623,7 +4623,6 @@ static void execSetupGame_setGameSpeeds()
   setup.game_frame_delay = atoi(game_speed_current->identifier);
 
 #if defined(PLATFORM_VITA)
-  // Vsync is required for perfectly smooth gameplay on Vita in 60fps mode
   if (setup.game_frame_delay == 16) {
     vita2d_set_vblank_wait(SDL_TRUE);
   } else {
