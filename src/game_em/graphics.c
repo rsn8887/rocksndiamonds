@@ -300,10 +300,20 @@ static void animscreen(void)
   };
 
   if (!game.use_native_emc_graphics_engine)
-    for (y = 2; y < EM_MAX_CAVE_HEIGHT - 2; y++)
-      for (x = 2; x < EM_MAX_CAVE_WIDTH - 2; x++)
+  {
+#if defined(PLATFORM_VITA)
+    // This causes significant speedup on Vita when playing the bundled Emerald Mine levels
+    const int x_max = MIN(lev.width + 2, EM_MAX_CAVE_WIDTH - 2);
+    const int y_max = MIN(lev.height + 2, EM_MAX_CAVE_HEIGHT - 2);
+#else
+    const int x_max = EM_MAX_CAVE_WIDTH - 2;
+    const int y_max = EM_MAX_CAVE_HEIGHT - 2;
+#endif
+    for (y = 2; y < y_max; y++)
+      for (x = 2; x < x_max; x++)
 	SetGfxAnimation_EM(&graphic_info_em_object[Draw[y][x]][frame],
 			   Draw[y][x], 7 - frame, x - 2, y - 2);
+  }
 
   for (y = top; y < top + MAX_BUF_YSIZE; y++)
   {
