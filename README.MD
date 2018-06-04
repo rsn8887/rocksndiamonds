@@ -50,26 +50,26 @@ Vita-Exclusive Features
 
 Gamepad Controls
 ======
-Dpad or left stick = move player and navigate menus
-right stick = move mouse pointer
-Cross = primary button (+ direction for snap action or turning mirrors, also 'ok' in menu)
-Circle = secondary button (drop dynamite)
-Square / L = left mouse button
-Triangle / R = right mouse button
-Select = quit (escape key, also cancels requesters)
-Start = pause (space key)
-R+Triangle = set focus to next player (ALL->1->2->3->4)
-R+Square = set player focus to previous player (ALL<-1<-2<-3<-4)
+Dpad or left stick = move player and navigate menus  
+right stick = move mouse pointer  
+Cross = primary button (+ direction for snap action or turning mirrors, also 'ok' in menu)  
+Circle = secondary button (drop dynamite)  
+Square / L = left mouse button  
+Triangle / R = right mouse button  
+Select = quit (escape key, also cancels requesters)  
+Start = pause (space key)  
+R+Triangle = set focus to next player (ALL->1->2->3->4)  
+R+Square = set player focus to previous player (ALL<-1<-2<-3<-4)  
 
 Touch Controls
 =======
 Note: for multi-touch gestures, the fingers have to be far enough apart from each other, so that the Vita will not erroneously recognize them as a single finger. Otherwise the pointer will jump around.
 
-Single short tap = left mouse click
-Single short tap while holding a second finger down = right mouse click
-Single finger drag = move the mouse pointer
-Dual finger drag = drag'n'drop (left mouse button is held down)
-Three finger drag = drag'n'drop (right mouse button is held down)
+Single short tap = left mouse click  
+Single short tap while holding a second finger down = right mouse click  
+Single finger drag = move the mouse pointer  
+Dual finger drag = drag'n'drop (left mouse button is held down)  
+Three finger drag = drag'n'drop (right mouse button is held down)  
 
 More Levels for Rocks'n'Diamonds
 =========
