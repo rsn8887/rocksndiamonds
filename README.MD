@@ -4,11 +4,11 @@ These are my Vita ports of Rocks'n'Diamonds and Mirrormagic.
 
 **Rocks'n'Diamonds** is a Boulderdash type game by Holger Schemel with many unique features, such as the ability to play remade levels from Boulderdash, Emerald Mine and Supaplex and many more levels.
 
-![Screenshot of Rocks'n'Diamonds Vita](https://s7.postimg.cc/xrw7ou3uj/rnd_new_a.jpg)
+![Screenshot of Rocks'n'Diamonds Vita](screenshots/rnd_new_a.jpg)
 
 **Mirrormagic** is a game by Holger Schemel in the tradition of Deflektor and Mindbender. You guide a laser beam by adjusting mirrors before the time limit runs out.
 
-![Screenshot of Mirrormagic Vita](https://s7.postimg.cc/ek92sklmj/mm_new_a.jpg)
+![Screenshot of Mirrormagic Vita](screenshots/mm_new_a.jpg)
 
 More information about the games can be found at the homepages for the Windows versions:
 
