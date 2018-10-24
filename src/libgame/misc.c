@@ -570,7 +570,7 @@ char *getLoginName()
     if (GetUserName(login_name, &buffer_size) == 0)
       strcpy(login_name, ANONYMOUS_NAME);
   }
-#elif defined(PLATFORM_UNIX) && !defined(PLATFORM_ANDROID) && !defined(PLATFORM_VITA)
+#elif defined(PLATFORM_UNIX) && !defined(PLATFORM_ANDROID) && !defined(PLATFORM_VITA) && !defined(PLATFORM_SWITCH)
   if (login_name == NULL)
   {
     struct passwd *pwd;
@@ -602,7 +602,7 @@ char *getRealName()
     else
       real_name = ANONYMOUS_NAME;
   }
-#elif defined(PLATFORM_UNIX) && !defined(PLATFORM_ANDROID) && !defined(PLATFORM_VITA)
+#elif defined(PLATFORM_UNIX) && !defined(PLATFORM_ANDROID) && !defined(PLATFORM_VITA) && !defined(PLATFORM_SWITCH)
   if (real_name == NULL)
   {
     struct passwd *pwd;

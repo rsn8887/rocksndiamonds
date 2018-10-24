@@ -26,7 +26,7 @@
 #include "image.h"
 #include "setup.h"
 #include "misc.h"
-#if defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
 #include "psp2_input.h"
 #endif
 

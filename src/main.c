@@ -7725,7 +7725,7 @@ static void InitProgramConfig(char *command_filename)
 
 #if defined(PLATFORM_WIN32) || defined(PLATFORM_MACOSX)
   userdata_subdir = program_title;
-#elif defined(PLATFORM_UNIX) && !defined(PLATFORM_VITA)
+#elif defined(PLATFORM_UNIX) && !defined(PLATFORM_VITA) && !defined(PLATFORM_SWITCH)
   userdata_subdir = userdata_subdir_unix;
 #else
   userdata_subdir = USERDATA_DIRECTORY_OTHER;
@@ -7759,7 +7759,11 @@ int main(int argc, char *argv[])
   scePowerSetGpuXbarClockFrequency(222);
   InitProgramConfig("rocksndiamonds");
 #else
+#if defined(PLATFORM_SWITCH)
+  InitProgramConfig("rocksndiamonds");
+#else
   InitProgramConfig(argv[0]);
+#endif
 #endif
   InitWindowTitleFunction(getWindowTitleString);
   InitExitMessageFunction(DisplayExitMessage);

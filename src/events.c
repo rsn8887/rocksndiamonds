@@ -193,7 +193,7 @@ void HandleEvents()
 	HandleWindowEvent((WindowEvent *) &event);
 	break;
 
-#if !defined(PLATFORM_VITA)
+#if !defined(PLATFORM_VITA) && !defined(PLATFORM_SWITCH)
     // Vita has its own touch module
       case EVENT_FINGERPRESS:
       case EVENT_FINGERRELEASE:

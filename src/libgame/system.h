@@ -66,7 +66,7 @@
 #define STR_SPECIAL_RENDERING_DOUBLE	"stream_and_target_texture"
 
 #if defined(TARGET_SDL2)
-#if defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
 #define STR_SPECIAL_RENDERING_DEFAULT	STR_SPECIAL_RENDERING_OFF
 #else
 #define STR_SPECIAL_RENDERING_DEFAULT	STR_SPECIAL_RENDERING_DOUBLE
@@ -81,7 +81,7 @@
 #define SPECIAL_RENDERING_DOUBLE	3
 
 #if defined(TARGET_SDL2)
-#if defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
 #define SPECIAL_RENDERING_DEFAULT	SPECIAL_RENDERING_OFF
 #else
 #define SPECIAL_RENDERING_DEFAULT	SPECIAL_RENDERING_DOUBLE
@@ -114,7 +114,7 @@
 #define SCREEN_KEYBOARD_POS(h)		((h) / 2)
 #endif
 
-#if defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
 #define USE_COMPLETE_DISPLAY
 #endif
 
@@ -480,7 +480,7 @@
 #define NOT_AVAILABLE		"(not available)"
 
 /* default value for undefined filename */
-#if defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
 #define UNDEFINED_FILENAME	RW_GAME_DIR"/[NONE]"
 #else
 #define UNDEFINED_FILENAME	"[NONE]"
@@ -563,7 +563,7 @@
 #define LOG_ERR_ID		1
 #define NUM_LOGS		2
 
-#if defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
 #define STRING_PARENT_DIRECTORY		".."
 #define STRING_TOP_DIRECTORY		RW_GAME_DIR"/"
 #else

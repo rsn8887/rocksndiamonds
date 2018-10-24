@@ -30,8 +30,10 @@ WINDRES = windres
 CONVERT_ICON_ARGS = -transparent black -background transparent
 
 ifneq ($(TARGET),vita)
+ifneq ($(TARGET),switch)
 PROGBASE = rocksndiamonds
 PROGNAME = ../$(PROGBASE)
+endif
 endif
 
 EDITION ?= default
@@ -97,6 +99,46 @@ SYS_LDFLAGS = $(SYS_CFLAGS) -lSDL2_image -lSDL2_mixer -lSDL2_net -lSDL2 -lvorbis
         -lmikmod -lSceSysmodule_stub -lSceCtrl_stub -lSceTouch_stub -lm -lSceNet_stub \
         -lSceNetCtl_stub -lScePgf_stub -ljpeg -lfreetype -lc -lSceHid_stub \
         -lScePower_stub -lSceCommonDialog_stub -lSceAppUtil_stub -lpng16 -lz -lSceAppmgr_stub
+AR = $(PREFIX)-ar
+RANLIB = $(PREFIX)-ranlib
+endif
+
+ifeq ($(TARGET),switch)			# compiling for Switch target
+SYS_CFLAGS = -DTARGET_SDL2 \
+        -D__SWITCH__ \
+        -I$(DEVKITPRO)/portlibs/switch/include/SDL2 \
+        -I$(DEVKITPRO)/portlibs/switch/include \
+        -Wl,-q -Wall -Wno-unused-variable -O3 \
+        -ffunction-sections \
+        -ffast-math -march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE \
+		-fno-rtti -fno-exceptions
+SYS_LDFLAGS = $(SYS_CFLAGS) \
+        -specs=$(DEVKITPRO)/libnx/switch.specs \
+        -L$(DEVKITPRO)/libnx/lib \
+        -L$(DEVKITPRO)/portlibs/switch/lib \
+        -lSDL2_image \
+        -lSDL2_mixer \
+        -lSDL2_net \
+        -lSDL2 \
+        -lEGL \
+        -lGLESv2 \
+        -lglapi \
+        -ldrm_nouveau \
+        -lnx \
+        -lm \
+        -lvorbisfile \
+        -lvorbis \
+        -logg \
+        -lmpg123 \
+        -lflac \
+        -lmikmod \
+        -lmodplug \
+        -ljpeg \
+        -lfreetype \
+        -lc \
+        -lpng16 \
+        -lz \
+		-lstdc++
 AR = $(PREFIX)-ar
 RANLIB = $(PREFIX)-ranlib
 endif
@@ -254,7 +296,17 @@ $(PROGNAME).vpk: $(PROGNAME).velf
 $(PROGNAME).elf: $(RNDLIBS) $(TIMESTAMP_FILE) $(OBJS) $(ICON)
 	$(CC) $(PROFILING) $(OBJS) $(ICON) $(RNDLIBS) $(LDFLAGS) -o $@
 else
+ifeq ($(TARGET),switch)
+all: $(AUTOCONF) libgame_dir game_em_dir game_sp_dir game_mm_dir $(PROGNAME).nro
+$(PROGNAME).nro: $(PROGNAME).elf
+	$(DEVKITPRO)/tools/bin/nacptool --create "$(PROGBASE)" "rsn8887" "1.0" $(PROGNAME).nacp
+	$(DEVKITPRO)/tools/bin/elf2nro $(PROGNAME).elf $(PROGNAME).nro --icon=../switchdata/$(PROGBASE)/icon0.jpg --nacp=$(PROGNAME).nacp
+
+$(PROGNAME).elf: $(RNDLIBS) $(TIMESTAMP_FILE) $(OBJS) $(ICON)
+	$(CC) $(PROFILING) $(OBJS) $(ICON) $(RNDLIBS) $(LDFLAGS) -o $@
+else
 all: $(AUTOCONF) libgame_dir game_em_dir game_sp_dir game_mm_dir $(PROGNAME) graphics_dir
+endif
 endif
 
 $(PROGNAME): $(RNDLIBS) $(TIMESTAMP_FILE) $(OBJS) $(ICON)

@@ -1,7 +1,18 @@
 //
 // Created by rsn8887 on 05/18/18.
 
+#if defined(__vita__)
 #include <psp2/kernel/processmgr.h>
+#define displayWidth 960.0
+#define displayHeight 544.0
+#endif
+
+#if defined(__SWITCH__)
+#define SCE_TOUCH_PORT_MAX_NUM 1
+#define displayWidth 1280.0
+#define displayHeight 720.0
+#endif
+
 #include "psp2_touch.h"
 
 #include "math.h"
@@ -73,10 +84,11 @@ void PSP2_HandleTouch(SDL_Event *event) {
 
 static void preprocessEvents(SDL_Event *event) {
 
+#if defined(__vita__)
 	// prevent suspend (scummvm games contain a lot of cutscenes..)
 	sceKernelPowerTick(SCE_KERNEL_POWER_TICK_DISABLE_AUTO_SUSPEND);
 	sceKernelPowerTick(SCE_KERNEL_POWER_TICK_DISABLE_OLED_OFF);
-
+#endif
 	// Supported touch gestures:
 	// left mouse click: single finger short tap
 	// right mouse click: second finger short tap while first finger is still down
@@ -160,8 +172,8 @@ static void preprocessFingerUp(SDL_Event *event) {
 				if ((event->tfinger.timestamp - _finger[port][i].timeLastDown) <= MAX_TAP_TIME) {
 					// short (<MAX_TAP_TIME ms) tap is interpreted as right/left mouse click depending on # fingers already down
 					// but only if the finger hasn't moved since it was pressed down by more than MAX_TAP_MOTION_DISTANCE pixels
-					float xrel = ((event->tfinger.x * 960.0) - (_finger[port][i].lastDownX * 960.0));
-					float yrel = ((event->tfinger.y * 544.0) - (_finger[port][i].lastDownY * 544.0));
+					float xrel = ((event->tfinger.x * displayWidth) - (_finger[port][i].lastDownX * displayWidth));
+					float yrel = ((event->tfinger.y * displayHeight) - (_finger[port][i].lastDownY * displayHeight));
 					float maxRSquared = (float) (MAX_TAP_MOTION_DISTANCE * MAX_TAP_MOTION_DISTANCE);
 					if ((xrel * xrel + yrel * yrel) < maxRSquared) {
 						if (numFingersDown == 2 || numFingersDown == 1) {
@@ -220,11 +232,11 @@ static void preprocessFingerMotion(SDL_Event *event) {
 	if (numFingersDown >= 1) {
 		int x = lastmx;
 		int y = lastmy;
-		int xrel = (int)(event->tfinger.dx * 960.0);
-		int yrel = (int)(event->tfinger.dy * 544.0);
+		int xrel = (int)(event->tfinger.dx * displayWidth);
+		int yrel = (int)(event->tfinger.dy * displayHeight);
 
-		x = lastmx + (int)(event->tfinger.dx * 960.0);
-		y = lastmy + (int)(event->tfinger.dy * 544.0);
+		x = lastmx + (int)(event->tfinger.dx * displayWidth);
+		y = lastmy + (int)(event->tfinger.dy * displayHeight);
 
 		// update the current finger's coordinates so we can track it later
 		for (int i = 0; i < MAX_NUM_FINGERS; i++) {

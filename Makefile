@@ -66,6 +66,24 @@ sdl:
 sdl2:
 	@$(MAKE_CMD) TARGET=sdl2
 
+switchrocks:	PREFIX = $(DEVKITPRO)/devkitA64/bin/aarch64-none-elf
+switchrocks:	CC = $(PREFIX)-gcc
+switchrocks:	PROGBASE = Rocksndiamonds
+switchrocks:	PROGNAME = ../$(PROGBASE)
+switchrocks:	RO_GAME_DIR = .
+switchrocks:	RW_GAME_DIR = .
+switchrocks:
+	@$(MAKE_CMD) TARGET=switch PLATFORM=switch
+
+switchmirror:	PREFIX = $(DEVKITPRO)/devkitA64/bin/aarch64-none-elf
+switchmirror:	CC = $(PREFIX)-gcc
+switchmirror:	PROGBASE = Mirrormagic
+switchmirror:	PROGNAME = ../$(PROGBASE)
+switchmirror:	RO_GAME_DIR = .
+switchmirror:	RW_GAME_DIR = .
+switchmirror:
+	@$(MAKE_CMD) TARGET=switch PLATFORM=switch
+	
 vitarocks:	VITA_TITLEID := ROCKS0000
 vitarocks:	PREFIX = arm-vita-eabi
 vitarocks:	CC = $(PREFIX)-gcc

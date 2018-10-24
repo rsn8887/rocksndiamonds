@@ -49,9 +49,22 @@ OBJS_VITA = psp2-dirent.o \
 	psp2_input.o \
 	psp2_touch.o
 
+SRCS_SWITCH = \
+	psp2_input.c \
+	psp2_touch.c
+
+OBJS_SWITCH = \
+	psp2_input.o \
+	psp2_touch.o
+
 ifeq ($(TARGET),vita)
 SRCS += $(SRCS_VITA)
 OBJS += $(OBJS_VITA)
+endif
+
+ifeq ($(TARGET),switch)
+SRCS += $(SRCS_SWITCH)
+OBJS += $(OBJS_SWITCH)
 endif
 
 LIBGAME = libgame.a

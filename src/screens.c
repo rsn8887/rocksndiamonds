@@ -342,7 +342,7 @@ static struct
   {	30,	"Very Slow"			},
   {	25,	"Slow"				},
   {	20,	"Normal"			},
-#if defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
   {	16,	"60 fps"			},
 #endif
   {	15,	"Fast"				},

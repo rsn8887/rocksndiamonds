@@ -301,7 +301,7 @@ static void animscreen(void)
 
   if (!game.use_native_emc_graphics_engine)
   {
-#if defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
     // This causes significant speedup on Vita when playing the bundled Emerald Mine levels
     const int x_max = MIN(lev.width + 2, EM_MAX_CAVE_WIDTH - 2);
     const int y_max = MIN(lev.height + 2, EM_MAX_CAVE_HEIGHT - 2);

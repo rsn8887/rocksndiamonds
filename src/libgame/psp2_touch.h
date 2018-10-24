@@ -4,7 +4,9 @@
 #define PSP2_TOUCH_H
 
 #include <SDL2/SDL.h>
+#if defined(__vita__)
 #include <psp2/touch.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {

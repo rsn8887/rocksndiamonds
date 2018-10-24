@@ -20,7 +20,7 @@
 #include "setup.h"
 #include "joystick.h"
 #include "misc.h"
-#if defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
 #include "psp2_input.h"
 #endif
 
@@ -1586,7 +1586,7 @@ boolean PendingEvent(void)
 
 void WaitEvent(Event *event)
 {
-#if defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
   PSP2_WaitEvent(event);
 #else
   SDLWaitEvent(event);

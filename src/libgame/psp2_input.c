@@ -1,6 +1,8 @@
 #include "psp2_input.h"
 #include "psp2_touch.h"
+#if defined(__vita__)
 #include "psp2_kbdvita.h"
+#endif
 #include <math.h>
 
 int lastmx = 0;
@@ -210,6 +212,9 @@ void rescaleAnalog(int *x, int *y, int dead) {
 }
 
 void PSP2_StartTextInput(char *initial_text, int multiline) {
+#if !defined(__vita__)
+	return;
+#else
 	if (!can_use_IME_keyboard)
 	return;
 
@@ -292,6 +297,7 @@ void PSP2_StartTextInput(char *initial_text, int multiline) {
 		up_event.key.keysym.mod = 0;
 		SDL_PushEvent(&up_event);
 	}
+#endif
 }
 
 void PSP2_StopTextInput() {

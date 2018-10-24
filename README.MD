@@ -1,6 +1,6 @@
 Description
 ======
-These are my Vita ports of Rocks'n'Diamonds and Mirrormagic. 
+These are my Vita and Switch ports of Rocks'n'Diamonds and Mirrormagic. 
 
 **Rocks'n'Diamonds** is a Boulderdash type game by Holger Schemel with many unique features, such as the ability to play remade levels from Boulderdash, Emerald Mine and Supaplex and many more levels.
 
@@ -29,26 +29,38 @@ Thanks to Holger Schemel for making a great and portable game.
 
 Thanks to the many devs of VitaSDK for a great development environment.
 
-Installation
+Installation (Vita)
 =====
 
 - install the vpks
 
 - extract contents of rocksndiamonds_data.zip and mirrormagic_data.zip and copy them to your Vita's ux0:/data folder. You should have folders ux0:/data/rocksndiamonds and ux0:/data/mirrormagic on your Vita with the files in them.  
 
-Vita-Exclusive Features
+Installation (Switch)
+=====
+
+- extract `rocksndiamonds_data.zip` and `mirrormagic_data.zip` to the folder `/switch/` on your sd card. You should have folders such as `/switch/rocksndiamonds/levels` and `/switch/mirrormagic/levels` and more. Make sure none of the folders has the "archive" flag set after copying.
+ 
+- copy `rocksndiamonds.nro` to `/switch/rocksndiamonds/` and `mirrormagic.nro` to `/switch/mirrormagic/`
+
+- use hblauncher or any other method of choice to start the games.
+
+Vita/Switch-Exclusive Features
 =======
 - game controller mapping including analog joystick mouse controls
 - front touch controls with left/right mouse click and drag and drop gestures
-- text entry with Vita touch keyboard, no physical keyboard or mouse required
 - support for bluetooth keyboard and mouse
 - the game runs smooth at the same speed as the desktop versions
 - additional level package with thousands of levels as separate download (see 'More Levels')
 - auto-hide mouse cursor when using the dpad
 - easily switch player focus in multiplayer games using r+triangle and r+square
+
+Vita-Exclusive Features
+========
+- text entry with Vita touch keyboard, no physical keyboard or mouse required
 - 60 fps mode for smooth scrolling and motion in levels where the Vita can achieve stable 60 frames per second.
 
-Gamepad Controls
+Gamepad Controls (Vita)
 ======
 Dpad or left stick = move player and navigate menus  
 right stick = move mouse pointer  
@@ -60,6 +72,19 @@ Select = quit (escape key, also cancels requesters)
 Start = pause (space key)  
 R+Triangle = set focus to next player (ALL->1->2->3->4)  
 R+Square = set player focus to previous player (ALL<-1<-2<-3<-4)  
+
+Gamepad Controls (Switch)
+======
+Dpad or left stick = move player and navigate menus  
+right stick = move mouse pointer  
+B = primary button (+ direction for snap action or turning mirrors, also 'ok' in menu)  
+A = secondary button (drop dynamite)  
+Y or L = left mouse button  
+X or R = right mouse button  
+Minus = quit (escape key, also cancels requesters)  
+Plus = pause (space key)  
+R+X = set focus to next player (ALL->1->2->3->4)  
+R+Y = set player focus to previous player (ALL<-1<-2<-3<-4)  
 
 Touch Controls
 =======
@@ -79,37 +104,47 @@ More Levels for Rocks'n'Diamonds
 - I made a single easy-to-install zip [More_Levels_v2.zip](https://mega.nz/#!tdBhDRrZ!t4XrrCyXzCSGjcgFjvh-Sm1MhGErcsWg3UOjUZCKvZ4) (~80 MB). It contains selected additional levels from the above site and is available here:
 https://mega.nz/#!tdBhDRrZ!t4XrrCyXzCSGjcgFjvh-Sm1MhGErcsWg3UOjUZCKvZ4
 
-- Just download, unzip, and  transfer to your Vita, so that you have a subfolder ux0:/data/rocksndiamonds/levels/More_Levels.
+- Just download, unzip, and  transfer to your Vita, so that you have a subfolder ux0:/data/rocksndiamonds/levels/More_Levels. Or transfer to your Switch, so that you have a subfolder switch/rocksndiamonds/levels/More_Levels.
 
 - FTP transfer of levelsets has to be done using binary transfer mode, not Auto or ASCII . Otherwise some levels will be treated as ASCII with mangled line endings and won't work. This was verified with the Emerald_Mine_Club_original_1 levels and FileZilla FTP.
 
 Notes
 =====
-- To load new level sets, go to the level number selection in the menu, and press x. A new screen should open that shows a few levels. Go to the parent dir and into the folder Classic Games. There are many more levels already included in that folder.
+- To load new level sets, go to the level number selection in the menu, and press X (B on Switch). A new screen should open that shows a few levels. Go to the parent dir and into the folder Classic Games. There are many more levels already included in that folder.
 
 - Sometimes when loading a levelset after loading other level sets one after the other, the game runs out of memory and quits. This is fixed by simply restarting the game and loading the levelset again.
 
-- To answer the OK/Cancel dialogs in the game, press select to cancel (select is escape), or x for OK.
+- To answer the OK/Cancel dialogs in the game, press select (minus on Switch) to cancel (this is escape), or X (B on Switch) for OK.
 
-- You can install new level sets for Rocks'n'Diamonds by copying them into ux0:/data/rocksndiamonds/levels. See the official manual: https://www.artsoft.org/rocksndiamonds/manual/manual.html#
+- You can install new level sets for Rocks'n'Diamonds by copying them into ux0:/data/rocksndiamonds/levels on Vita, or /switch/rocksndiamonds/levels on Switch. See the official manual: https://www.artsoft.org/rocksndiamonds/manual/manual.html#
 
-- You can install new level sets for Mirrormagic by copying them into ux0:/data/mirrormagic/levels. 
+- Similarly, you can install new level sets for Mirrormagic by copying them into ux0:/data/mirrormagic/levels on Vita, and /switch/mirrormagic/levels on Switch. 
 
-- If you mess up some options and want to reset to default, you can delete the folder 'ux0:/data/rocksndiamonds/userdata' and/or 'ux0:/data/mirrormagic/userdata'
+- If you mess up some options and want to reset to default, you can delete the folder 'ux0:/data/rocksndiamonds/userdata' and/or 'ux0:/data/mirrormagic/userdata'. On Switch, the folders are '/switch/rocksndiamonds/userdata' and '/switch/mirrormagic/userdata'.
 
-- For multiplayer team mode in Rocks'n'Diamonds to work on VitaTV, enable it via Setup->Game & Menu->Team-Mode (Multiplayer)->on. You also have to find make a level that has multiple players. r+square and r+triangle can be used in-game to change focus between players, see Game Controls. All controllers have to be paired before launching the app, otherwise they will not be recognized by the game.
+- For multiplayer team mode in Rocks'n'Diamonds, enable it via Setup->Game & Menu->Team-Mode (Multiplayer)->on. You also have to find make a level that has multiple players. R+Square and R+Triangle (R+Y and R+X on Switch) can be used in-game to change focus between players, see Game Controls. All controllers have to be paired before launching the app, otherwise they will not be recognized by the game.
 
 Build Instructions
 =====
 - clone the repository, then
 ````
 cd rocksndiamonds
+````
+Then use
+````
 make vitarocks
 ````
-for Rocks'n'Diamonds, or
+or
 ````
-cd rocksndiamonds
+make switchrocks
+````
+for Rocks'n'Diamonds, and
+````
 make vitamirror
+````
+or
+````
+make switchmirror
 ````
 for Mirrormagic.
 
@@ -117,6 +152,10 @@ You need the latest SDL2 Vita library from 05-23-2018 or later for this to work.
 
 CHANGELOG
 =====
+1.9switch
+
+- same as release 1.9, but added Switch executables to the downloads
+
 1.9
 
 - add '60 fps' game speed setting for perfectly smooth motion in some levels on the Vita. It works well with the bundled Emerald Mine levelsets. This mode is 20% faster than the default setting 'normal.'

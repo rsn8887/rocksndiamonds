@@ -16,13 +16,8 @@
 #include "setup.h"
 
 #if defined(PLATFORM_VITA)
-#include "psp2_input.h"
-#include "psp2_touch.h"
 #include "vita2d.h"
-extern int lastmx, lastmy; // mouse pointer coordinates
-int old_lastmx = 0, old_lastmy = 0;
-int ranalog_x = 0, ranalog_y = 0; // joystick values for pointer control
-SDL_Texture *vita_mousepointer;
+
 // these three internal structures from SDL2 are needed to gain access to the raw
 // vita2d_texture pointer and be able to set the hw-filter to "linear" to make the
 // sharp-bilinear-simple shader work correctly
@@ -90,6 +85,15 @@ typedef struct VITA_TextureData
   unsigned int	h;
 } VITA_TextureData;
 #endif
+#endif
+
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
+#include "psp2_input.h"
+#include "psp2_touch.h"
+extern int lastmx, lastmy; // mouse pointer coordinates
+int old_lastmx = 0, old_lastmy = 0;
+int ranalog_x = 0, ranalog_y = 0; // joystick values for pointer control
+SDL_Texture *vita_mousepointer;
 extern int vita_mousepointer_visible;
 const char *cursor_image_vita[] =
 {
@@ -327,13 +331,13 @@ static void UpdateScreenExt(SDL_Rect *rect, boolean with_frame_delay)
     SDL_RenderCopy(sdl_renderer, sdl_texture_target, src_rect2, dst_rect2);
   }
 
-#if defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
   int x, y;
   PSP2_HandleJoystickMouse(ranalog_x, ranalog_y);
   // Once per frame, need to ensure touch-based simulated clicks are finished
   PSP2_FinishSimulatedMouseClicks();
-  int max_x = (960 * 100) / video.window_scaling_percent;
-  int max_y = (544 * 100) / video.window_scaling_percent;
+  int max_x = (video.display_width * 100) / video.window_scaling_percent;
+  int max_y = (video.display_height * 100) / video.window_scaling_percent;
   if (lastmx > max_x) lastmx = max_x;
   if (lastmx < 0) lastmx = 0;
   if (lastmy > max_y) lastmy = max_y;
@@ -665,7 +669,7 @@ inline static void SDLInitVideoBuffer_VideoBuffer(boolean fullscreen)
 #if defined(TARGET_SDL2)
   // SDL 2.0: support for (desktop) fullscreen mode available
   video.fullscreen_available = TRUE;
-#if defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
   // disable fullscreen on Vita
   video.fullscreen_available = FALSE;
 #endif
@@ -729,7 +733,7 @@ static boolean SDLCreateScreen(boolean fullscreen)
 
 #if defined(TARGET_SDL2)
 #if 1
-#if defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
   int renderer_flags = SDL_RENDERER_ACCELERATED;
 #else
   int renderer_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE;
@@ -849,14 +853,16 @@ static boolean SDLCreateScreen(boolean fullscreen)
 #if defined(PLATFORM_VITA)
   // Vita SDL2 port only supports ABGR8888 textures 
   new_surface = SDL_CreateRGBSurface(0, width, height, 32, 0xFF, 0xFF << 8, 0xFF << 16, 0x00);
+#else
+	// use SDL default values for RGB masks and no alpha channel
+  new_surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+#endif
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
   // Vita mouse pointer
   //SDL_Surface *temp = IMG_Load("ux0:/data/rocksndiamonds/vitapointer.png");  
   SDL_Surface *temp = IMG_ReadXPMFromArray((char **) cursor_image_vita);
   vita_mousepointer = SDL_CreateTextureFromSurface(sdl_renderer, temp);
   SDL_FreeSurface(temp);
-#else
-	// use SDL default values for RGB masks and no alpha channel
-  new_surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
 #endif
     if (new_surface == NULL)
 	  Error(ERR_WARN, "SDL_CreateRGBSurface() failed: %s", SDL_GetError());
@@ -1028,7 +1034,7 @@ void SDLSetWindowScaling(int window_scaling_percent)
 
   float window_scaling_factor = (float)window_scaling_percent / 100;
   video.window_scaling_percent = window_scaling_percent;
-#if defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
   SDLSetScreenSizeAndOffsets(video.width, video.height);
   SDLSetScreenSizeForRenderer(video.screen_width, video.screen_height);
 #endif
@@ -1200,7 +1206,7 @@ void SDLSetScreenProperties()
 
 void SDLSetScreenRenderingMode(char *screen_rendering_mode)
 {
-#if defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
   video.screen_rendering_mode = SPECIAL_RENDERING_OFF;
 #elif defined(TARGET_SDL2)
   video.screen_rendering_mode =
@@ -1309,7 +1315,7 @@ void SDLBlitTexture(Bitmap *bitmap,
   dst_rect.y = dst_y;
   dst_rect.w = width;
   dst_rect.h = height;
-#if defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
   dst_rect.x += video.screen_xoffset;
   dst_rect.y += video.screen_yoffset;
 #endif
@@ -2919,7 +2925,7 @@ static void setJoystickAxis(int nr, int axis_id_raw, int axis_value)
   if (axis_id == -1)
     return;
 
-#if defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
   // right analog = mouse on Vita
   //if (nr == 1) 
   //{
@@ -3115,7 +3121,7 @@ void SDLInitJoysticks()
 
 #if defined(TARGET_SDL2)
 // Vita has correct internal mappings
-#if !defined(PLATFORM_VITA)
+#if !defined(PLATFORM_VITA) && !defined(PLATFORM_SWITCH)
     num_mappings = SDL_GameControllerAddMappingsFromFile(mappings_file_base);
     /* the included game controller base mappings should always be found */
     if (num_mappings == -1)

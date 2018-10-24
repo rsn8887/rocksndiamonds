@@ -482,7 +482,7 @@ char *getProgramConfigFilename(char *command_filename)
   char *config_filename_2 = getStringCat2(command_filename_2, ".conf");
   char *config_filename_3 = getPath2(conf_directory, SETUP_FILENAME);
 
-#if !defined(PLATFORM_VITA)
+#if !defined(PLATFORM_VITA) && !defined(PLATFORM_SWITCH)
   // 1st try: look for config file that exactly matches the binary filename
   if (fileExists(config_filename_1))
     return config_filename_1;
@@ -1405,7 +1405,7 @@ char *getHomeDir()
     if (!SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, 0, dir)))
       strcpy(dir, ".");
   }
-#elif defined(PLATFORM_VITA)
+#elif defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
   dir = RW_GAME_DIR;
 #elif defined(PLATFORM_UNIX)
   if (dir == NULL)
@@ -1509,7 +1509,7 @@ static int posix_mkdir(const char *pathname, mode_t mode)
 
 static boolean posix_process_running_setgid()
 {
-#if defined(PLATFORM_UNIX) && !defined(PLATFORM_VITA)
+#if defined(PLATFORM_UNIX) && !defined(PLATFORM_VITA) && !defined(PLATFORM_SWITCH)
   return (getgid() != getegid());
 #else
   return FALSE;
@@ -1521,7 +1521,7 @@ void createDirectory(char *dir, char *text, int permission_class)
   if (directoryExists(dir))
     return;
 
-#if defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
   mkdir(dir, 0);
 #else
   /* leave "other" permissions in umask untouched, but ensure group parts
@@ -1561,7 +1561,7 @@ void InitUserDataDirectory()
 
 void SetFilePermissions(char *filename, int permission_class)
 {
-#if !defined(PLATFORM_VITA)
+#if !defined(PLATFORM_VITA) && !defined(PLATFORM_SWITCH)
   int running_setgid = posix_process_running_setgid();
   int perms = (permission_class == PERMS_PRIVATE ?
 	       FILE_PERMS_PRIVATE : FILE_PERMS_PUBLIC);

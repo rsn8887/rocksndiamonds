@@ -153,6 +153,12 @@
 #define PLATFORM_STRING "Android"
 #endif
 
+#if defined(__SWITCH__)
+#define PLATFORM_SWITCH
+#undef  PLATFORM_STRING
+#define PLATFORM_STRING "Switch"
+#endif
+
 #if defined(__vita__)
 #define PLATFORM_VITA
 #undef  PLATFORM_STRING
@@ -174,7 +180,7 @@
 /* this should better go into "system.h" or "features.h" (yet to be created) */
 /* ========================================================================= */
 
-#if (defined(PLATFORM_UNIX) || defined(TARGET_SDL)) && !defined(PLATFORM_VITA)
+#if (defined(PLATFORM_UNIX) || defined(TARGET_SDL)) && !defined(PLATFORM_VITA) && !defined(PLATFORM_SWITCH)
 #define NETWORK_AVALIABLE
 #endif
 
