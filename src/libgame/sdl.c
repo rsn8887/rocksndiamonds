@@ -669,7 +669,7 @@ inline static void SDLInitVideoBuffer_VideoBuffer(boolean fullscreen)
 #if defined(TARGET_SDL2)
   // SDL 2.0: support for (desktop) fullscreen mode available
   video.fullscreen_available = TRUE;
-#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
+#if defined(PLATFORM_VITA)
   // disable fullscreen on Vita
   video.fullscreen_available = FALSE;
 #endif
