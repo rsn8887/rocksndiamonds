@@ -51,7 +51,7 @@ Installation (Switch)
  
 - copy `rocksndiamonds.nro` to `switch/rocksndiamonds/` and `mirrormagic.nro` to `switch/mirrormagic/`
 
-- use nsp injection to start the games, otherwise the on-screen keyboard will not work
+- use nsp injection to start the games, otherwise the on-screen keyboard will not work. On SX OS, you can do this by holding down R while launching any installed game to make hbmenu appear. 
 
 Vita/Switch-Exclusive Features
 =======
