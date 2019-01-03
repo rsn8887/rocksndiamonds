@@ -2,7 +2,7 @@ Recent Changes
 ======
 1.11 (Switch only)
 
-- implement on-screen keyboard (only works when launching with nsp injection)
+- On Switch, implement on-screen keyboard (only works when launching with nsp injection)
 
 Description
 ======
@@ -164,7 +164,7 @@ CHANGELOG
 =====
 1.11 (Switch only)
 
-- implement on-screen keyboard (only works when launching with nsp injection)
+- On Switch, implement on-screen keyboard (only works when launching with nsp injection)
 
 1.10 (Switch only)
 

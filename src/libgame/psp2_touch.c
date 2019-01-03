@@ -26,6 +26,9 @@ static void preprocessFingerMotion(SDL_Event *event);
 static int psp2RearTouch = 0; // always disable rear_touch for now
 extern int lastmx;
 extern int lastmy;
+static int hiresdx = 0;
+static int hiresdy = 0;
+
 static int touch_initialized = 0;
 unsigned int _simulatedClickStartTime[SCE_TOUCH_PORT_MAX_NUM][2]; // initiation time of last simulated left or right click (zero if no click)
 
@@ -296,11 +299,23 @@ static void preprocessFingerMotion(SDL_Event *event) {
 			}
 		}
 		if (updatePointer) {
-			event->type = SDL_MOUSEMOTION;
-			event->motion.x = x;
-			event->motion.y = y;
-			event->motion.xrel = xrel;
-			event->motion.yrel = yrel;
+			const int slowdown = 16;
+			hiresdx += (int)(event->tfinger.dx * displayWidth * slowdown);
+			hiresdy += (int)(event->tfinger.dy * displayHeight * slowdown);
+			int xrel = hiresdx / slowdown;
+			int yrel = hiresdy / slowdown;
+
+			if (xrel || yrel) {
+				int x = lastmx + xrel;
+				int y = lastmy + yrel;
+				event->type = SDL_MOUSEMOTION;
+				event->motion.x = x;
+				event->motion.y = y;
+				event->motion.xrel = xrel;
+				event->motion.yrel = yrel;
+				hiresdx %= slowdown;
+				hiresdy %= slowdown;
+			}
 		}
 	}
 }
