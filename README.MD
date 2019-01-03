@@ -51,7 +51,7 @@ Installation (Switch)
  
 - copy `rocksndiamonds.nro` to `switch/rocksndiamonds/` and `mirrormagic.nro` to `switch/mirrormagic/`
 
-- use hblauncher or any other method of choice to start the games.
+- use nsp injection to start the games, otherwise the on-screen keyboard will not work
 
 Vita/Switch-Exclusive Features
 =======
