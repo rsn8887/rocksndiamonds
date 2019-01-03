@@ -27,7 +27,7 @@ https://www.artsoft.org/rocksndiamonds/manual/index.html
 
 Thanks
 ======
-Thanks to my awesome supporters on Patreon, especially Andyways, CountDuckula, Matthew Machnee, and Sean Ritzo.
+Thanks to my supporters on Patreon: Andyways, CountDuckula, Greg Gibson, Jesse Harlin, Özgür Karter, Matthew Machnee, and RadicalR.
 
 Thanks @FrangarCJ for help with optimizing the rendering. 
 
