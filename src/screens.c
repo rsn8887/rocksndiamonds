@@ -3819,7 +3819,7 @@ void HandleTypeName(int newxpos, Key key)
     strcpy(last_player_name, setup.player_name);
 
     xpos = newxpos;
-#if defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
 	PSP2_StartTextInput(setup.player_name, 0);
 #else
     StartTextInput(startx, starty, pos->width, pos->height);

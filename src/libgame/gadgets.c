@@ -15,7 +15,7 @@
 #include "gadgets.h"
 #include "text.h"
 #include "misc.h"
-#if defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
 #include "psp2_input.h"
 #endif
 
@@ -1716,7 +1716,7 @@ boolean HandleGadgets(int mx, int my, int button)
 	DrawGadget(gi, DG_PRESSED, gi->direct_draw);
 
       if (press_event)
-#if defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
   PSP2_StartTextInput(gi->textinput.value, 1);
 #else
 	StartTextInput(gi->x, gi->y, gi->width, gi->height);
@@ -1737,7 +1737,7 @@ boolean HandleGadgets(int mx, int my, int button)
 	DrawGadget(gi, DG_PRESSED, gi->direct_draw);
 
       if (press_event)
-#if defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
   PSP2_StartTextInput(gi->textarea.value, 1);
 #else
 	StartTextInput(gi->x, gi->y, gi->width, gi->height);

@@ -3,6 +3,9 @@
 #if defined(__vita__)
 #include "psp2_kbdvita.h"
 #endif
+#if defined(__SWITCH__)
+#include "switch_kbd.h"
+#endif
 #include <math.h>
 
 int lastmx = 0;
@@ -212,14 +215,16 @@ void rescaleAnalog(int *x, int *y, int dead) {
 }
 
 void PSP2_StartTextInput(char *initial_text, int multiline) {
-#if !defined(__vita__)
-	return;
-#else
 	if (!can_use_IME_keyboard)
 	return;
 
 	can_use_IME_keyboard = 0;
+#ifdef __SWITCH__
+	char text[500] = {'\0'};
+	kbdswitch_get("Enter New Text:", initial_text, 600, multiline, text);
+#else
 	char *text = kbdvita_get("Enter New Text:", initial_text, 600, multiline);
+#endif
 	if (text != NULL)
 	{
 		if (multiline) {
@@ -297,7 +302,6 @@ void PSP2_StartTextInput(char *initial_text, int multiline) {
 		up_event.key.keysym.mod = 0;
 		SDL_PushEvent(&up_event);
 	}
-#endif
 }
 
 void PSP2_StopTextInput() {

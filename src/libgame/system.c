@@ -1714,7 +1714,7 @@ void StartTextInput(int x, int y, int width, int height)
 void StopTextInput()
 {
 #if defined(TARGET_SDL2)
-#if defined(PLATFORM_VITA)
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
   PSP2_StopTextInput();
   return;
 #endif

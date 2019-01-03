@@ -51,11 +51,13 @@ OBJS_VITA = psp2-dirent.o \
 
 SRCS_SWITCH = \
 	psp2_input.c \
-	psp2_touch.c
+	psp2_touch.c \
+	switch_kbd.c
 
 OBJS_SWITCH = \
 	psp2_input.o \
-	psp2_touch.o
+	psp2_touch.o \
+	switch_kbd.o
 
 ifeq ($(TARGET),vita)
 SRCS += $(SRCS_VITA)

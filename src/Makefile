@@ -108,6 +108,7 @@ SYS_CFLAGS = -DTARGET_SDL2 \
         -D__SWITCH__ \
         -I$(DEVKITPRO)/portlibs/switch/include/SDL2 \
         -I$(DEVKITPRO)/portlibs/switch/include \
+        -I$(DEVKITPRO)/libnx/include \
         -Wl,-q -Wall -Wno-unused-variable -O3 \
         -ffunction-sections \
         -ffast-math -march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE \
@@ -299,7 +300,7 @@ else
 ifeq ($(TARGET),switch)
 all: $(AUTOCONF) libgame_dir game_em_dir game_sp_dir game_mm_dir $(PROGNAME).nro
 $(PROGNAME).nro: $(PROGNAME).elf
-	$(DEVKITPRO)/tools/bin/nacptool --create "$(PROGBASE)" "rsn8887" "1.0" $(PROGNAME).nacp
+	$(DEVKITPRO)/tools/bin/nacptool --create "$(PROGBASE)" "rsn8887" "1.11" $(PROGNAME).nacp
 	$(DEVKITPRO)/tools/bin/elf2nro $(PROGNAME).elf $(PROGNAME).nro --icon=../switchdata/$(PROGBASE)/icon0.jpg --nacp=$(PROGNAME).nacp
 
 $(PROGNAME).elf: $(RNDLIBS) $(TIMESTAMP_FILE) $(OBJS) $(ICON)

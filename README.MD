@@ -1,3 +1,9 @@
+Recent Changes
+======
+1.11 (Switch only)
+
+- implement on-screen keyboard (only works when launching with nsp injection)
+
 Description
 ======
 These are my Vita and Switch ports of Rocks'n'Diamonds and Mirrormagic. 
@@ -21,7 +27,7 @@ https://www.artsoft.org/rocksndiamonds/manual/index.html
 
 Thanks
 ======
-Thanks to my awesome supporters on Patreon, especially Andyways, CountDuckula, and Sean Ritzo.
+Thanks to my awesome supporters on Patreon, especially Andyways, CountDuckula, Matthew Machnee, and Sean Ritzo.
 
 Thanks @FrangarCJ for help with optimizing the rendering. 
 
@@ -29,19 +35,21 @@ Thanks to Holger Schemel for making a great and portable game.
 
 Thanks to the many devs of VitaSDK for a great development environment.
 
+Thanks to all the devs of DevKitPro for Switch for a great development suite. 
+
 Installation (Vita)
 =====
 
 - install the vpks
 
-- extract contents of rocksndiamonds_data.zip and mirrormagic_data.zip and copy them to your Vita's ux0:/data folder. You should have folders ux0:/data/rocksndiamonds and ux0:/data/mirrormagic on your Vita with the files in them.  
+- extract contents of `rocksndiamonds_data.zip` and `mirrormagic_data.zip` and copy them to your Vita's `ux0:/data` folder. You should have folders `ux0:/data/rocksndiamonds` and `ux0:/data/mirrormagic` on your Vita with the files in them.  
 
 Installation (Switch)
 =====
 
-- extract `rocksndiamonds_data.zip` and `mirrormagic_data.zip` to the folder `/switch/` on your sd card. You should have folders such as `/switch/rocksndiamonds/levels` and `/switch/mirrormagic/levels` and more. Make sure none of the folders has the "archive" flag set after copying.
+- extract `rocksndiamonds_data.zip` and `mirrormagic_data.zip` to the folder `switch/` in the root of your sd card. You should have folders such as `switch/rocksndiamonds/levels` and `switch/mirrormagic/levels` and more. Make sure none of the folders or files has the "archive" flag set after copying.
  
-- copy `rocksndiamonds.nro` to `/switch/rocksndiamonds/` and `mirrormagic.nro` to `/switch/mirrormagic/`
+- copy `rocksndiamonds.nro` to `switch/rocksndiamonds/` and `mirrormagic.nro` to `switch/mirrormagic/`
 
 - use hblauncher or any other method of choice to start the games.
 
@@ -49,16 +57,16 @@ Vita/Switch-Exclusive Features
 =======
 - game controller mapping including analog joystick mouse controls
 - front touch controls with left/right mouse click and drag and drop gestures
-- support for bluetooth keyboard and mouse
 - the game runs smooth at the same speed as the desktop versions
 - additional level package with thousands of levels as separate download (see 'More Levels')
 - auto-hide mouse cursor when using the dpad
 - easily switch player focus in multiplayer games using r+triangle and r+square
+- 60 fps mode for smooth scrolling and motion in levels where the system can achieve stable 60 frames per second.
+- text entry with Vita/Switch touch keyboard, no physical keyboard or mouse required
 
 Vita-Exclusive Features
 ========
-- text entry with Vita touch keyboard, no physical keyboard or mouse required
-- 60 fps mode for smooth scrolling and motion in levels where the Vita can achieve stable 60 frames per second.
+- support for bluetooth keyboard and mouse
 
 Gamepad Controls (Vita)
 ======
@@ -104,12 +112,14 @@ More Levels for Rocks'n'Diamonds
 - I made a single easy-to-install zip [More_Levels_v2.zip](https://mega.nz/#!tdBhDRrZ!t4XrrCyXzCSGjcgFjvh-Sm1MhGErcsWg3UOjUZCKvZ4) (~80 MB). It contains selected additional levels from the above site and is available here:
 https://mega.nz/#!tdBhDRrZ!t4XrrCyXzCSGjcgFjvh-Sm1MhGErcsWg3UOjUZCKvZ4
 
-- Just download, unzip, and  transfer to your Vita, so that you have a subfolder ux0:/data/rocksndiamonds/levels/More_Levels. Or transfer to your Switch, so that you have a subfolder switch/rocksndiamonds/levels/More_Levels.
+- Just download, unzip, and  transfer to your Vita, so that you have a subfolder `ux0:/data/rocksndiamonds/levels/More_Levels`. Or transfer to your Switch, so that you have a subfolder `switch/rocksndiamonds/levels/More_Levels`.
 
 - FTP transfer of levelsets has to be done using binary transfer mode, not Auto or ASCII . Otherwise some levels will be treated as ASCII with mangled line endings and won't work. This was verified with the Emerald_Mine_Club_original_1 levels and FileZilla FTP.
 
 Notes
 =====
+- It is possible to get a wrong screen size on Switch by messing with the options. The solution is to navigate to setup->graphics and enable Fullscreen mode and set Window size to 100%, then select "save & exit"
+
 - To load new level sets, go to the level number selection in the menu, and press X (B on Switch). A new screen should open that shows a few levels. Go to the parent dir and into the folder Classic Games. There are many more levels already included in that folder.
 
 - Sometimes when loading a levelset after loading other level sets one after the other, the game runs out of memory and quits. This is fixed by simply restarting the game and loading the levelset again.
@@ -152,9 +162,17 @@ You need the latest SDL2 Vita library from 05-23-2018 or later for this to work.
 
 CHANGELOG
 =====
+1.11 (Switch only)
+
+- implement on-screen keyboard (only works when launching with nsp injection)
+
+1.10 (Switch only)
+
+- fixed problem on Switch with too-large screen in docked mode when loading saved config. The workaround was to change window size to 100% and save again. Now Fullscreen mode should be set to "On" and then this problem does not appear anymore.
+
 1.9switch
 
-- same as release 1.9, but added Switch executables to the downloads
+- added Switch port
 
 1.9
 
