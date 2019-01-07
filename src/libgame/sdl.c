@@ -735,6 +735,13 @@ static boolean SDLCreateScreen(boolean fullscreen)
 #if 1
 #if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
   int renderer_flags = SDL_RENDERER_ACCELERATED;
+#if defined(PLATFORM_SWITCH)
+  if (setup.game_frame_delay == 16) {
+    SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
+  } else {
+    SDL_SetHint(SDL_HINT_RENDER_VSYNC, "0");
+  }
+#endif
 #else
   int renderer_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE;
 #endif
@@ -1078,6 +1085,13 @@ void SDLSetWindowScalingQuality(char *window_scaling_quality)
   }
 
 #else
+#if defined(PLATFORM_SWITCH)
+  if (setup.game_frame_delay == 16) {
+    SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
+  } else {
+    SDL_SetHint(SDL_HINT_RENDER_VSYNC, "0");
+  }
+#endif
   new_texture = SDL_CreateTexture(sdl_renderer,
 				  SDL_PIXELFORMAT_ARGB8888,
 				  SDL_TEXTUREACCESS_STREAMING,

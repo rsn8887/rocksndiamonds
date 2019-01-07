@@ -4629,6 +4629,13 @@ static void execSetupGame_setGameSpeeds()
     vita2d_set_vblank_wait(SDL_FALSE);
   }
 #endif
+#if defined(PLATFORM_SWITCH)
+  if (setup.game_frame_delay == 16) {
+    SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
+  } else {
+    SDL_SetHint(SDL_HINT_RENDER_VSYNC, "0");
+  }
+#endif
 
   /* needed for displaying game speed text instead of identifier */
   game_speed_text = game_speed_current->name;
