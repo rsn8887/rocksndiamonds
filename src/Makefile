@@ -279,7 +279,7 @@ all: $(AUTOCONF) libgame_dir game_em_dir game_sp_dir game_mm_dir $(PROGNAME).vpk
 
 $(PROGNAME).vpk: $(PROGNAME).velf
 	vita-make-fself -s $< ../build/$(PROGBASE)/eboot.bin
-	vita-mksfoex -s TITLE_ID=$(VITA_TITLEID) $(PROGBASE) param.sfo
+	vita-mksfoex -s TITLE_ID=$(VITA_TITLEID) -d ATTRIBUTE2=12 $(PROGBASE) param.sfo
 	mv param.sfo ../build/$(PROGBASE)/sce_sys/param.sfo
 	cp -r ../psp2data/$(PROGBASE)/* ../build/$(PROGBASE)/
 
