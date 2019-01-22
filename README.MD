@@ -1,8 +1,10 @@
 Recent Changes
 ======
-1.11 (Switch only)
+1.12
 
-- On Switch, implement on-screen keyboard (only works when launching with nsp injection)
+- fix crash when loading levelsets that change screenmode, such as Supaplex (Original)
+- on Switch, fix slow-down when pressing home button
+- on Switch, use 1080p resolution when docked
 
 Description
 ======
@@ -162,6 +164,13 @@ You need the latest SDL2 Vita library from 05-23-2018 or later for this to work.
 
 CHANGELOG
 =====
+1.12
+
+- fix crash when loading levelsets that change screenmode, such as Supaplex (Original)
+- on Switch, fix slow-down when pressing home button
+- on Switch, use 1080p resolution when docked
+
+
 1.11 (Switch only)
 
 - On Switch, implement on-screen keyboard (only works when launching with nsp injection)
