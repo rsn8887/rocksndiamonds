@@ -735,11 +735,6 @@ static boolean SDLCreateScreen(boolean fullscreen)
 #if 1
 #if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
   int renderer_flags = SDL_RENDERER_ACCELERATED;
-  if (setup.game_frame_delay == 16) {
-    SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
-  } else {
-    SDL_SetHint(SDL_HINT_RENDER_VSYNC, "0");
-  }
 #else
   int renderer_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE;
 #endif
@@ -836,17 +831,28 @@ static boolean SDLCreateScreen(boolean fullscreen)
       vita2d_free_texture(vita_texture->tex);
       vita_texture->tex = vita2d_create_empty_texture_format(width, height, SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1BGR);
       vita2d_texture_set_filters(vita_texture->tex, min_filter, mag_filter);
-      if (setup.game_frame_delay == 16) {
-        vita2d_set_vblank_wait(SDL_TRUE);
-      } else {
-        vita2d_set_vblank_wait(SDL_FALSE);
-      }
 #else
       sdl_texture_stream = SDL_CreateTexture(sdl_renderer,
 					     SDL_PIXELFORMAT_ARGB8888,
 					     SDL_TEXTUREACCESS_STREAMING,
 					     width, height);
 #endif
+      if (setup.game_frame_delay == 16) {
+#if defined(PLATFORM_VITA)
+        vita2d_set_vblank_wait(SDL_TRUE);
+#endif
+#if defined(PLATFORM_SWITCH)
+        SDL_GL_SetSwapInterval(1);
+#endif
+      } else {
+#if defined(PLATFORM_VITA)
+        vita2d_set_vblank_wait(SDL_FALSE);
+#endif
+#if defined(PLATFORM_SWITCH)
+        SDL_GL_SetSwapInterval(0);
+#endif
+      }
+
       if (SDL_RenderTargetSupported(sdl_renderer))
 	sdl_texture_target = SDL_CreateTexture(sdl_renderer,
 					       SDL_PIXELFORMAT_ARGB8888,
@@ -856,21 +862,20 @@ static boolean SDLCreateScreen(boolean fullscreen)
       if (sdl_texture_stream != NULL)
       {
 #if defined(PLATFORM_VITA)
-  // Vita SDL2 port only supports ABGR8888 textures 
-  new_surface = SDL_CreateRGBSurface(0, width, height, 32, 0xFF, 0xFF << 8, 0xFF << 16, 0x00);
+        // Vita SDL2 port only supports ABGR8888 textures 
+        new_surface = SDL_CreateRGBSurface(0, width, height, 32, 0xFF, 0xFF << 8, 0xFF << 16, 0x00);
 #else
-	// use SDL default values for RGB masks and no alpha channel
-  new_surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
+      	// use SDL default values for RGB masks and no alpha channel
+        new_surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
 #endif
 #if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
-  // Vita mouse pointer
-  //SDL_Surface *temp = IMG_Load("ux0:/data/rocksndiamonds/vitapointer.png");  
-  SDL_Surface *temp = IMG_ReadXPMFromArray((char **) cursor_image_vita);
-  vita_mousepointer = SDL_CreateTextureFromSurface(sdl_renderer, temp);
-  SDL_FreeSurface(temp);
+        // Vita mouse pointer
+        SDL_Surface *temp = IMG_ReadXPMFromArray((char **) cursor_image_vita);
+        vita_mousepointer = SDL_CreateTextureFromSurface(sdl_renderer, temp);
+        SDL_FreeSurface(temp);
 #endif
-    if (new_surface == NULL)
-	  Error(ERR_WARN, "SDL_CreateRGBSurface() failed: %s", SDL_GetError());
+        if (new_surface == NULL)
+          Error(ERR_WARN, "SDL_CreateRGBSurface() failed: %s", SDL_GetError());
       }
       else
       {
@@ -1061,11 +1066,6 @@ void SDLSetWindowScalingQuality(char *window_scaling_quality)
     return;
 
   SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, window_scaling_quality);
-  if (setup.game_frame_delay == 16) {
-    SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
-  } else {
-    SDL_SetHint(SDL_HINT_RENDER_VSYNC, "0");
-  }
 #if defined(PLATFORM_VITA)
   // Vita SDL2 only support ABGR8888
   new_texture = SDL_CreateTexture(sdl_renderer,
@@ -1081,17 +1081,13 @@ void SDLSetWindowScalingQuality(char *window_scaling_quality)
   vita2d_free_texture(vita_texture->tex);
   vita_texture->tex = vita2d_create_empty_texture_format(video.width, video.height, SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1BGR);
   vita2d_texture_set_filters(vita_texture->tex, min_filter, mag_filter);
-  if (setup.game_frame_delay == 16) {
-    vita2d_set_vblank_wait(SDL_TRUE);
-  } else {
-    vita2d_set_vblank_wait(SDL_FALSE);
-  }
 #else
   new_texture = SDL_CreateTexture(sdl_renderer,
 				  SDL_PIXELFORMAT_ARGB8888,
 				  SDL_TEXTUREACCESS_STREAMING,
 				  video.width, video.height);
 #endif
+
   if (new_texture != NULL)
   {
     SDL_DestroyTexture(sdl_texture_stream);

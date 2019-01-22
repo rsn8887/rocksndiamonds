@@ -1,7 +1,9 @@
-Note: On Switch, the "Game Speed: 60 fps" currently requires a save and restart for perfectly smooth scrolling, because VSync is only enabled/disabled on startup.
-
 Recent Changes
 ======
+1.13 (Switch only)
+
+- on Switch, fix automatically turning on/off VSync on selecting/deselecting Game Speed: 60 fps mode 
+
 1.12
 
 - fix crash when loading levelsets that change screenmode, such as "Supaplex (Original)"
@@ -113,8 +115,8 @@ More Levels for Rocks'n'Diamonds
 
 - More than 50,000 additional Rocks'n'Diamonds levels can be downloaded here: http://www.artsoft.org/rocksndiamonds/levels/
 
-- I made a single easy-to-install zip [More_Levels_v2.zip](https://mega.nz/#!tdBhDRrZ!t4XrrCyXzCSGjcgFjvh-Sm1MhGErcsWg3UOjUZCKvZ4) (~80 MB). It contains selected additional levels from the above site and is available here:
-https://mega.nz/#!tdBhDRrZ!t4XrrCyXzCSGjcgFjvh-Sm1MhGErcsWg3UOjUZCKvZ4
+- I made a single easy-to-install zip [More_Levels_v3.zip](https://mega.nz/#!UVgFmKbL!3x-WGZ4e8J1nSUW1TbuVeNdgmqC1bOP9B5Nseg_JZ3Y) (~90 MB). It contains selected additional levels from the above site and is available here:
+https://mega.nz/#!UVgFmKbL!3x-WGZ4e8J1nSUW1TbuVeNdgmqC1bOP9B5Nseg_JZ3Y
 
 - Just download, unzip, and  transfer to your Vita, so that you have a subfolder `ux0:/data/rocksndiamonds/levels/More_Levels`. Or transfer to your Switch, so that you have a subfolder `switch/rocksndiamonds/levels/More_Levels`.
 
@@ -166,6 +168,10 @@ You need the latest SDL2 Vita library from 05-23-2018 or later for this to work.
 
 CHANGELOG
 =====
+1.13 (Switch only)
+
+- on Switch, fix automatically turning on/off VSync on selecting/deselecting Game Speed: 60 fps mode 
+
 1.12
 
 - fix crash when loading levelsets that change screenmode, such as Supaplex (Original)

@@ -4623,17 +4623,20 @@ static void execSetupGame_setGameSpeeds()
   setup.game_frame_delay = atoi(game_speed_current->identifier);
 
   if (setup.game_frame_delay == 16) {
-    SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
-  } else {
-    SDL_SetHint(SDL_HINT_RENDER_VSYNC, "0");
-  }
 #if defined(PLATFORM_VITA)
-  if (setup.game_frame_delay == 16) {
     vita2d_set_vblank_wait(SDL_TRUE);
-  } else {
-    vita2d_set_vblank_wait(SDL_FALSE);
-  }
 #endif
+#if defined(PLATFORM_SWITCH)
+  SDL_GL_SetSwapInterval(1);
+#endif
+  } else {
+#if defined(PLATFORM_VITA)
+    vita2d_set_vblank_wait(SDL_FALSE);
+#endif
+#if defined(PLATFORM_SWITCH)
+  SDL_GL_SetSwapInterval(0);
+#endif
+  }
 
   /* needed for displaying game speed text instead of identifier */
   game_speed_text = game_speed_current->name;
