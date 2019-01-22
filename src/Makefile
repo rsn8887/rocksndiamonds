@@ -300,7 +300,7 @@ else
 ifeq ($(TARGET),switch)
 all: $(AUTOCONF) libgame_dir game_em_dir game_sp_dir game_mm_dir $(PROGNAME).nro
 $(PROGNAME).nro: $(PROGNAME).elf
-	$(DEVKITPRO)/tools/bin/nacptool --create "$(PROGBASE)" "rsn8887" "1.11" $(PROGNAME).nacp
+	$(DEVKITPRO)/tools/bin/nacptool --create "$(PROGBASE)" "rsn8887" "1.12" $(PROGNAME).nacp
 	$(DEVKITPRO)/tools/bin/elf2nro $(PROGNAME).elf $(PROGNAME).nro --icon=../switchdata/$(PROGBASE)/icon0.jpg --nacp=$(PROGNAME).nacp
 
 $(PROGNAME).elf: $(RNDLIBS) $(TIMESTAMP_FILE) $(OBJS) $(ICON)
