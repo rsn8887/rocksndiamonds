@@ -142,7 +142,11 @@ static SDL_Window *sdl_window = NULL;
 static SDL_Renderer *sdl_renderer = NULL;
 static SDL_Texture *sdl_texture_stream = NULL;
 static SDL_Texture *sdl_texture_target = NULL;
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
+static boolean fullscreen_enabled = TRUE;
+#else
 static boolean fullscreen_enabled = FALSE;
+#endif
 #endif
 
 static boolean limit_screen_updates = FALSE;
@@ -669,10 +673,6 @@ inline static void SDLInitVideoBuffer_VideoBuffer(boolean fullscreen)
 #if defined(TARGET_SDL2)
   // SDL 2.0: support for (desktop) fullscreen mode available
   video.fullscreen_available = TRUE;
-#if defined(PLATFORM_VITA)
-  // disable fullscreen on Vita
-  video.fullscreen_available = FALSE;
-#endif
 #else
   // SDL 1.2: no support for fullscreen mode in R'n'D anymore
   video.fullscreen_available = FALSE;
@@ -735,13 +735,11 @@ static boolean SDLCreateScreen(boolean fullscreen)
 #if 1
 #if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
   int renderer_flags = SDL_RENDERER_ACCELERATED;
-#if defined(PLATFORM_SWITCH)
   if (setup.game_frame_delay == 16) {
     SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
   } else {
     SDL_SetHint(SDL_HINT_RENDER_VSYNC, "0");
   }
-#endif
 #else
   int renderer_flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE;
 #endif
@@ -1063,6 +1061,11 @@ void SDLSetWindowScalingQuality(char *window_scaling_quality)
     return;
 
   SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, window_scaling_quality);
+  if (setup.game_frame_delay == 16) {
+    SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
+  } else {
+    SDL_SetHint(SDL_HINT_RENDER_VSYNC, "0");
+  }
 #if defined(PLATFORM_VITA)
   // Vita SDL2 only support ABGR8888
   new_texture = SDL_CreateTexture(sdl_renderer,
@@ -1083,15 +1086,7 @@ void SDLSetWindowScalingQuality(char *window_scaling_quality)
   } else {
     vita2d_set_vblank_wait(SDL_FALSE);
   }
-
 #else
-#if defined(PLATFORM_SWITCH)
-  if (setup.game_frame_delay == 16) {
-    SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
-  } else {
-    SDL_SetHint(SDL_HINT_RENDER_VSYNC, "0");
-  }
-#endif
   new_texture = SDL_CreateTexture(sdl_renderer,
 				  SDL_PIXELFORMAT_ARGB8888,
 				  SDL_TEXTUREACCESS_STREAMING,
@@ -1169,17 +1164,12 @@ void SDLSetScreenSizeAndOffsets(int width, int height)
   video.screen_yoffset = 0;
 
 #if defined(USE_COMPLETE_DISPLAY)
-#if defined(PLATFORM_VITA)
+if (video.screen_height > video.display_height) {
   video.screen_width = video.display_width;
   video.screen_height = video.display_height;
-  video.screen_xoffset = ((video.screen_width * 100) / video.window_scaling_percent - width) / 2;
-  video.screen_yoffset = ((video.screen_height * 100) / video.window_scaling_percent - height) / 2;
-  if (video.window_scaling_percent < 100) {
-    // open a larger canvas to accomodate both the centered small windowp and mousepointer
-    video.screen_width = (video.display_width * 100) / video.window_scaling_percent;
-    video.screen_height = (video.display_height * 100) / video.window_scaling_percent;
-  }
-#else
+  video.screen_xoffset = (video.screen_width - width) / 2;
+  video.screen_yoffset = (video.screen_height - height) / 2;
+} else {
   float ratio_video   = (float) width / height;
   float ratio_display = (float) video.display_width / video.display_height;
 
@@ -1201,7 +1191,7 @@ void SDLSetScreenSizeAndOffsets(int width, int height)
 	  ratio_video, ratio_display);
 #endif
   }
-#endif
+}
 #endif
 }
 

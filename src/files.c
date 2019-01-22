@@ -9077,6 +9077,11 @@ static void LoadSetup_SpecialPostProcessing()
   /* make sure that scroll delay value stays inside valid range */
   setup.scroll_delay_value =
     MIN(MAX(MIN_SCROLL_DELAY, setup.scroll_delay_value), MAX_SCROLL_DELAY);
+	
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
+  /* force fullscreen mode on Vita/Switch */
+  setup.fullscreen = TRUE;
+#endif
 }
 
 void LoadSetup()

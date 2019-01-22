@@ -4622,18 +4622,16 @@ static void execSetupGame_setGameSpeeds()
 
   setup.game_frame_delay = atoi(game_speed_current->identifier);
 
+  if (setup.game_frame_delay == 16) {
+    SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
+  } else {
+    SDL_SetHint(SDL_HINT_RENDER_VSYNC, "0");
+  }
 #if defined(PLATFORM_VITA)
   if (setup.game_frame_delay == 16) {
     vita2d_set_vblank_wait(SDL_TRUE);
   } else {
     vita2d_set_vblank_wait(SDL_FALSE);
-  }
-#endif
-#if defined(PLATFORM_SWITCH)
-  if (setup.game_frame_delay == 16) {
-    SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
-  } else {
-    SDL_SetHint(SDL_HINT_RENDER_VSYNC, "0");
   }
 #endif
 
@@ -5613,8 +5611,10 @@ static struct TokenInfo setup_info_editor[] =
 static struct TokenInfo setup_info_graphics[] =
 {
 #if defined(TARGET_SDL2) && !defined(PLATFORM_ANDROID)
+#if !defined(PLATFORM_VITA) && !defined(PLATFORM_SWITCH)
   { TYPE_SWITCH,	&setup.fullscreen,	"Fullscreen:"		},
   { TYPE_ENTER_LIST,	execSetupChooseWindowSize, "Window Scaling:"	},
+#endif
   { TYPE_STRING,	&window_size_text,	""			},
   { TYPE_ENTER_LIST,	execSetupChooseScalingType, "Anti-Aliasing:"	},
   { TYPE_STRING,	&scaling_type_text,	""			},

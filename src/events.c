@@ -1918,8 +1918,11 @@ void HandleKey(Key key, int key_status)
       video.fullscreen_available &&
       !ignore_repeated_key)
   {
+#if defined(PLATFORM_VITA) || defined(PLATFORM_SWITCH)
+    setup.fullscreen = TRUE;
+#else
     setup.fullscreen = !setup.fullscreen;
-
+#endif
     ToggleFullscreenOrChangeWindowScalingIfNeeded();
 
     if (game_status == GAME_MODE_SETUP)
