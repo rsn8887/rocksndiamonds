@@ -1,8 +1,10 @@
+Note: On Switch, the "Game Speed: 60 fps" currently requires a save and restart for perfectly smooth scrolling, because VSync is only enabled/disabled on startup.
+
 Recent Changes
 ======
 1.12
 
-- fix crash when loading levelsets that change screenmode, such as Supaplex (Original)
+- fix crash when loading levelsets that change screenmode, such as "Supaplex (Original)"
 - on Switch, fix slow-down when pressing home button
 - on Switch, use 1080p resolution when docked
 
