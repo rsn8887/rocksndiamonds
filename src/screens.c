@@ -5614,8 +5614,8 @@ static struct TokenInfo setup_info_graphics[] =
 #if !defined(PLATFORM_VITA) && !defined(PLATFORM_SWITCH)
   { TYPE_SWITCH,	&setup.fullscreen,	"Fullscreen:"		},
   { TYPE_ENTER_LIST,	execSetupChooseWindowSize, "Window Scaling:"	},
-#endif
   { TYPE_STRING,	&window_size_text,	""			},
+#endif
   { TYPE_ENTER_LIST,	execSetupChooseScalingType, "Anti-Aliasing:"	},
   { TYPE_STRING,	&scaling_type_text,	""			},
   { TYPE_ENTER_LIST,	execSetupChooseRenderingMode, "Special Rendering:" },
