@@ -1,5 +1,9 @@
 Recent Changes
 ======
+1.14 (Switch only)
+
+- on Switch, fix limited pointer motion when using physical mouse 
+
 1.13 (Switch only)
 
 - on Switch, fix automatically turning on/off VSync on selecting/deselecting Game Speed: 60 fps mode 
