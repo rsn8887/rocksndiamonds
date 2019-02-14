@@ -127,19 +127,17 @@ SYS_LDFLAGS = $(SYS_CFLAGS) \
         -ldrm_nouveau \
         -lnx \
         -lm \
-        -lvorbisfile \
-        -lvorbis \
+        -lvorbisidec \
         -logg \
+        -lmodplug \
         -lmpg123 \
         -lflac \
-        -lmikmod \
-        -lmodplug \
         -ljpeg \
         -lfreetype \
         -lc \
         -lpng16 \
         -lz \
-		-lstdc++
+        -lstdc++
 AR = $(PREFIX)-ar
 RANLIB = $(PREFIX)-ranlib
 endif
