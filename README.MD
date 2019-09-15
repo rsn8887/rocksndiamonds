@@ -2,17 +2,9 @@ Recent Changes
 ======
 1.14 (Switch only)
 
-- on Switch, fix limited pointer motion when using physical mouse 
-
-1.13 (Switch only)
-
-- on Switch, fix automatically turning on/off VSync on selecting/deselecting Game Speed: 60 fps mode 
-
-1.12
-
-- fix crash when loading levelsets that change screenmode, such as "Supaplex (Original)"
-- on Switch, fix slow-down when pressing home button
-- on Switch, use 1080p resolution when docked
+- on Switch, add 9.0.0 support
+- on Switch, fix .ogg audio playback
+- on Switch, fix pointer getting stuck when controlled with physical USB mouse
 
 Description
 ======
@@ -37,7 +29,7 @@ https://www.artsoft.org/rocksndiamonds/manual/index.html
 
 Thanks
 ======
-Thanks to my supporters on Patreon: Andyways, CountDuckula, Greg Gibson, Jesse Harlin, Özgür Karter, Matthew Machnee, and RadicalR.
+Thanks to my supporters on Patreon: Andyways, CountDuckula, Greg Gibson, Jesse Harlin, Duncan Harris, Özgür Karter, Matthew Machnee, Mored1984, Ibrahim Fazel Poor, and RadicalR.
 
 Thanks @FrangarCJ for help with optimizing the rendering. 
 
@@ -172,6 +164,12 @@ You need the latest SDL2 Vita library from 05-23-2018 or later for this to work.
 
 CHANGELOG
 =====
+1.14 (Switch only)
+
+- on Switch, add 9.0.0 support
+- on Switch, fix .ogg audio playback
+- on Switch, fix pointer getting stuck when controlled with physical USB mouse
+
 1.13 (Switch only)
 
 - on Switch, fix automatically turning on/off VSync on selecting/deselecting Game Speed: 60 fps mode 
