@@ -129,6 +129,8 @@ SYS_LDFLAGS = $(SYS_CFLAGS) \
         -lm \
         -lvorbisidec \
         -logg \
+        -lopusfile \
+        -lopus \
         -lmodplug \
         -lmpg123 \
         -lflac \
@@ -136,6 +138,7 @@ SYS_LDFLAGS = $(SYS_CFLAGS) \
         -lfreetype \
         -lc \
         -lpng16 \
+        -lwebp \
         -lz \
         -lstdc++
 AR = $(PREFIX)-ar
