@@ -112,7 +112,7 @@ SYS_CFLAGS = -DTARGET_SDL2 \
         -Wl,-q -Wall -Wno-unused-variable -O3 \
         -ffunction-sections \
         -ffast-math -march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIE \
-		-fno-rtti -fno-exceptions
+		-fno-rtti -fno-exceptions -fcommon
 SYS_LDFLAGS = $(SYS_CFLAGS) \
         -specs=$(DEVKITPRO)/libnx/switch.specs \
         -L$(DEVKITPRO)/libnx/lib \
