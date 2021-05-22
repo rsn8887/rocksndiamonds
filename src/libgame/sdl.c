@@ -2655,8 +2655,14 @@ Bitmap *SDLLoadImage(char *filename)
 		    SDL_MapRGB(sdl_image_tmp->format, 0x00, 0x00, 0x00));
 
   /* create native transparent surface for current image */
+#if defined(PLATFORM_SWITCH)
+  if (!SDLHasAlpha(sdl_image_tmp))
+    new_bitmap->surface_masked = SDL_ConvertSurface(sdl_image_tmp, sdl_image_tmp->format, 0);
+  else
+#else
   if ((new_bitmap->surface_masked = SDLGetNativeSurface(sdl_image_tmp)) == NULL)
     Error(ERR_EXIT, "SDLGetNativeSurface() failed");
+#endif
 
   print_timestamp_time("SDLGetNativeSurface (masked)");
 
