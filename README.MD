@@ -1,10 +1,8 @@
 Recent Changes
 ======
-1.14 (Switch only)
+1.15 (Switch only)
 
-- on Switch, add 9.0.0 support
-- on Switch, fix .ogg audio playback
-- on Switch, fix pointer getting stuck when controlled with physical USB mouse
+- on Switch, add 12.0.0 support
 
 Description
 ======
@@ -29,7 +27,7 @@ https://www.artsoft.org/rocksndiamonds/manual/index.html
 
 Thanks
 ======
-Thanks to my supporters on Patreon: Andyways, CountDuckula, Greg Gibson, Jesse Harlin, Duncan Harris, Özgür Karter, Matthew Machnee, Mored1984, Ibrahim Fazel Poor, and RadicalR.
+Thanks to my supporters on Patreon: Andyways, Count Duckula, Jesse Harlin, Thomas Luten, Matthew Machnee, Mored4u, Ibrahim Fazel Poor, RadicalR.
 
 Thanks @FrangarCJ for help with optimizing the rendering. 
 
@@ -164,6 +162,10 @@ You need the latest SDL2 Vita library from 05-23-2018 or later for this to work.
 
 CHANGELOG
 =====
+1.15 (Switch only)
+
+- on Switch, add 12.0.0 support
+
 1.14 (Switch only)
 
 - on Switch, add 9.0.0 support
