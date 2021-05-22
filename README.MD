@@ -2,7 +2,7 @@ Recent Changes
 ======
 1.15 (Switch only)
 
-- on Switch, add 12.0.0 support
+- on Switch, add 12.0.0 support. Only .nro files changed, data is the same.
 
 Description
 ======
@@ -164,7 +164,7 @@ CHANGELOG
 =====
 1.15 (Switch only)
 
-- on Switch, add 12.0.0 support
+- on Switch, add 12.0.0 support. Only .nro files changed, data is the same.
 
 1.14 (Switch only)
 
